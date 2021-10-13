@@ -21,15 +21,20 @@
 
         <!--Preloader-->
 
-        <div id="preloader"></div>
+        <!--<div id="preloader"></div>-->
 
         <!-- Navbar -->
 
-        <header class="navbar">
+        <header class="navbar bg-dark">  <!-- navbar-dark is missing/not working -->
 
-            <a class="navbar-brand" href="">Company Directory</a>
+            <div class="container">
+
+                <a class="navbar-brand" href="">Company Directory</a>
+
+            </div>
 
         </header>
+
         <main class="container py-3">
 
             <ul id="mainNavTab" class="nav nav-tabs" role="tablist">
@@ -44,17 +49,113 @@
                 </li>
             </ul>
 
-            <form>
-                <div class="input-group">
+            <div class="d-flex justify-content-between mb-3">
+                <form>
+                    <div class="input-group">
 
-                    <input type="text" id="search-bar" class="form-control" placeholder="Search...">
+                        <input type="text" id="search-bar" class="form-control" placeholder="Search...">
 
-                    <div class="input-group-append">
-                        <button type="button" id="search-btn" class="btn btn-dark" title="search"><i class="fas fa-search"></i></button>
+                        <div class="input-group-append">
+                            <button type="button" id="search-btn" class="btn btn-dark" title="search"><i class="fas fa-search"></i></button>
+                        </div>
+
+                    </div>
+                </form>
+
+                <div class="btn-group ml-3" role="group">
+					<button type="button" id="add-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button>
+					<button type="button" id="filter-btn" class="btn btn-dark" data-toggle="modal" data-target="#filter-modal" aria-expanded="false" aria-controls="filter-collapse" title="filter"><i class="fas fa-filter"></i></button>
+				</div>
+            </div>
+
+            <!--tables-->
+
+            <table id="personnelTable" class="table table-striped">
+                <tr>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Department</th>
+                    <th>Location</th>
+                    <th>Options</th>
+                </tr>
+            </table>
+
+            <table id="departmentsTable" class="table table-striped">
+                <tr>
+                    <th>Department</th>
+                    <th>Location</th>
+                    <th>Options</th>
+                </tr>
+            </table>
+
+            <table id="locationTable" class="table table-striped">
+                <tr>
+                    <th>Location</th>
+                    <th>Options</th>
+                </tr>
+            </table>
+
+            <!--modals-->
+
+            <div class="modal fade" id="employeeModal" tabindex="-1" aria-labelledby="employeeModal" aria-hidden="true">
+            
+                <div class="modal-dialog">
+                    
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title" id="employeeName"></h5>
+    
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    
+                        </div>
+
+                        <div class="modal-body">
+
+                            <table>
+                                <tr>
+                                    <td>
+                                        Email:
+                                    </td>
+
+                                    <td id="employeeEmail">
+                                        
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        Department:
+                                    </td>
+
+                                    <td id="employeeDepartment">
+                                        
+                                    </td>
+                                    
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        Location:
+                                    </td>
+
+                                    <td id="employeeLocation">
+                                        
+                                    </td>
+                                    
+                                </tr>
+
+                            </table>
+
+                        </div>
+
+
                     </div>
 
                 </div>
-            </form>
+
+            </div>
 
         </main>
 

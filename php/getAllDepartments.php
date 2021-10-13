@@ -69,6 +69,7 @@
 	
 	mysqli_close($conn);
 
+	//print_r($output);
 	echo json_encode($output); 
 
 ?>
