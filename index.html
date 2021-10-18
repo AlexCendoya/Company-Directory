@@ -39,64 +39,93 @@
 
             <ul id="mainNavTab" class="nav nav-tabs" role="tablist">
                 <li class="nav-item flex-fill">
-                    <a class="nav-link active" id="personnel-tab" data-toggle="tab" href="#personnel" role="tab" aria-controls="personnel" aria-selected="true" title="personnel">Personnel</a>
+                    <a class="nav-link active" id="personnelTab" data-toggle="tab" href="#personnelTable" role="tab" aria-controls="personnel" aria-selected="true" title="personnel">Personnel</a>
                 </li>
                 <li class="nav-item flex-fill">
-                    <a class="nav-link" id="department-tab" data-toggle="tab" href="#department" role="tab" aria-controls="department" aria-selected="false" title="department">Departments</a>
+                    <a class="nav-link" id="departmentTab" data-toggle="tab" href="#departmentsTable" role="tab" aria-controls="department" aria-selected="false" title="department">Departments</a>
                 </li>
                 <li class="nav-item flex-fill">
-                    <a class="nav-link" id="location-tab" data-toggle="tab" href="#location" role="tab" aria-controls="location" aria-selected="false" title="location">Locations</a>
+                    <a class="nav-link" id="locationTab" data-toggle="tab" href="#locationTable" role="tab" aria-controls="location" aria-selected="false" title="location">Locations</a>
                 </li>
             </ul>
 			<br/>
-            <div class="d-flex justify-content-between mb-3">
-                <form>
-                    <div class="input-group">
 
-                        <input type="text" id="search-bar" class="form-control" placeholder="Search...">
+            <div class="tab-content py-3">
 
-                        <div class="input-group-append">
-                            <button type="button" id="search-btn" class="btn btn-dark" title="search"><i class="fas fa-search"></i></button>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <form>
+                        <div class="input-group">
+
+                            <input type="text" id="search-bar" class="form-control" placeholder="Search...">
+
+                            <div class="input-group-append">
+                                <button type="button" id="search-btn" class="btn btn-dark" title="search"><i class="fas fa-search"></i></button>
+                            </div>
+
                         </div>
+                    </form>
 
+                    <div class="btn-group ml-3" role="group">
+
+                        <button type="button" id="filter-btn" class="btn btn-dark" data-toggle="modal" data-target="#filter-modal" aria-expanded="false" aria-controls="filter-collapse" title="filter"><i class="fas fa-filter"></i></button>
                     </div>
-                </form>
+                </div>
 
-                <div class="btn-group ml-3" role="group">
-					<button type="button" id="add-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button>
-					<button type="button" id="filter-btn" class="btn btn-dark" data-toggle="modal" data-target="#filter-modal" aria-expanded="false" aria-controls="filter-collapse" title="filter"><i class="fas fa-filter"></i></button>
-				</div>
-            </div>
+                <!--tables-->
 
-            <!--tables-->
+                <table id="personnelTable" class="table table-striped">
+                    <th class="tableHeader">
+                        
+                        <h4>Personnel</h4>
 
-            <table id="personnelTable" class="table table-striped">
-                <tr>
-                    <th>Last Name</th>
-                    <th>First Name</th>
-                    <th>Department</th>
-                    <th>Location</th>
-                    <th>Options</th>
-                </tr>
-            </table>
+                        <button type="button" id="addEmployee-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button>
 
-            <table id="departmentsTable" class="table table-striped">
-                <tr>
-                    <th>Department</th>
-                    <th>Location</th>
-                    <th>Options</th>
-                </tr>
-            </table>
+                    </th>
+                    <tr>
+                        <th>Last Name</th>
+                        <th>First Name</th>
+                        <th>Department</th>
+                        <th>Location</th>
+                        <th>Options</th>
+                    </tr>
+                </table>
 
-            <table id="locationTable" class="table table-striped">
-                <tr>
-                    <th>Location</th>
-                    <th>Options</th>
-                </tr>
-            </table>
+                <table id="departmentsTable" class="table table-striped">
+                    <th class="tableHeader">
+                        
+                        <h4>Departments</h4>
+
+                        <button type="button" id="addDepartment-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button>
+
+                    </th>
+                    <tr>
+                        <th>Department</th>
+                        <th>Location</th>
+                        <th>Options</th>
+                    </tr>
+                </table>
+
+                <table id="locationTable" class="table table-striped">
+                    <th class="tableHeader">
+                        
+                        <h4>Location</h4>
+
+                        <button type="button" id="addLocation-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button>
+
+                    </th>
+                    <tr>
+                        <th>Location</th>
+                        <th>Options</th>
+                    </tr>
+                </table>
+
+            </div>    
+                
 
             <!--modals-->
 
+            <!--Info employee modal-->
 
             <div class="modal fade" id="employeeModal" tabindex="-1" aria-labelledby="employeeModal" aria-hidden="true">
             
@@ -157,6 +186,328 @@
                 </div>
 
             </div>
+
+            <!--Add employee modal-->
+
+            <div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeModal" aria-hidden="true">
+
+                <div class="modal-dialog">
+                    
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title">Add new employee</h5>
+
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                        </div>
+
+                        <div class="modal-body">
+
+                            <form action="js/script.js" id="addEmployeeForm">
+
+                                <div class="mb-3">
+                                    <label for="addEmployeeFirstName" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="addEmployeeFirstName" aria-describedby="addEmployeeFirstName-help" name="addEmployeeFirstName">
+                                    <div id="editEmployeeFirstName-help" class="form-text"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="addEmployeeLastName" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="addEmployeeLastName" aria-describedby="addEmployeeLastName-help" name="addEmployeeLastName">
+                                    <div id="addEmployeeLastName-help" class="form-text"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="addEmployeeJobTitle" class="form-label">Job Title</label>
+                                    <input type="text" class="form-control" id="addEmployeeJobTitle" aria-describedby="addEmployeeJobTitle-help" name="addEmployeeJobTitle">
+                                    <div id="addEmployeeJobTitle-help" class="form-text"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="addEmployeeEmail" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="addEmployeeEmail" aria-describedby="addEmployeeEmail-help" name="addEmployeeEmail">
+                                    <div id="addEmployeeEmail-help" class="form-text"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="addEmployeeDepartment" class="form-label">Department</label>
+                                    <select class="form-select" aria-label="Default select example" id="addEmployeeDepartment" name="addEmployeeDepartment" onchange="">
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="addEmployeeLocation" class="form-label">Location</label>
+                                    <select class="form-select" aria-label="Default select example" id="addEmployeeLocation" name="addEmployeeLocation">
+                                    </select>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="add-submit-btn" class="btn btn-primary">Submit</button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!--Edit employee modal-->
+
+            <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModal" aria-hidden="true">
+
+                <div class="modal-dialog">
+                    
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title">Edit employee information</h5>
+
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                        </div>
+
+                        <div class="modal-body">
+
+                            <form action="js/script.js" id="editEmployeeForm">
+
+                                <div class="mb-3">
+                                    <label for="editEmployeeFirstName" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="editEmployeeFirstName" aria-describedby="editEmployeeFirstName-help" name="editEmployeeFirstName">
+                                    <div id="editEmployeeFirstName-help" class="form-text"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="editEmployeeLastName" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="editEmployeeLastName" aria-describedby="editEmployeeLastName-help" name="editEmployeeLastName">
+                                    <div id="editEmployeeLastName-help" class="form-text"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="editEmployeeJobTitle" class="form-label">Job Title</label>
+                                    <input type="text" class="form-control" id="editEmployeeJobTitle" aria-describedby="editEmployeeJobTitle-help" name="editEmployeeJobTitle">
+                                    <div id="editEmployeeJobTitle-help" class="form-text"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="editEmployeeEmail" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="editEmployeeEmail" aria-describedby="editEmployeeEmail-help" name="editEmployeeEmail">
+                                    <div id="editEmployeeEmail-help" class="form-text"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="editEmployeeDepartment" class="form-label">Department</label>
+                                    <select class="form-select" aria-label="Default select example" id="editEmployeeDepartment" name="editEmployeeDepartment" onchange="">
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="editEmployeeLocation" class="form-label">Location</label>
+                                    <select class="form-select" aria-label="Default select example" id="editEmployeeLocation" name="editEmployeeLocation">
+                                    </select>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="add-submit-btn" class="btn btn-primary">Submit</button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!--Add department modal-->
+
+            <div class="modal fade" id="addDepartmentModal" tabindex="-1" aria-labelledby="addDepartmentModal" aria-hidden="true">
+
+                <div class="modal-dialog">
+                    
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title">Add new department</h5>
+
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                        </div>
+
+                        <div class="modal-body">
+
+                            <form action="js/script.js" id="addDepartmentForm">
+
+                                <div class="mb-3">
+                                    <label for="addtDepartmentName" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="addDepartmentName" aria-describedby="addDepartmentName-help" name="addDepartmentName">
+                                    <div id="addDepartmentName-help" class="form-text"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="addDepartmentLocation" class="form-label">Location</label>
+                                    <select class="form-select" aria-label="Default select example" id="addDepartmentLocation" name="addDepartmentLocation">
+                                    </select>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" id="addDepartment-submit-btn" class="btn btn-primary" onclick="submit()">Submit</button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!--Edit department modal-->
+
+            <div class="modal fade" id="editDepartmentModal" tabindex="-1" aria-labelledby="editDepartmentModal" aria-hidden="true">
+
+                <div class="modal-dialog">
+                    
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title">Edit department</h5>
+
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                        </div>
+
+                        <div class="modal-body">
+
+                            <form action="js/script.js" id="editDepartmentForm">
+
+                                <div class="mb-3">
+                                    <label for="editDepartmentName" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="editDepartmentName" aria-describedby="editDepartmentName-help" name="editDepartmentName">
+                                    <div id="editDepartmentName-help" class="form-text"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="editDepartmentLocation" class="form-label">Location</label>
+                                    <select class="form-select" aria-label="Default select example" id="editDepartmentLocation" name="editDepartmentLocation">
+                                    </select>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="add-submit-btn" class="btn btn-primary">Submit</button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Add location modal-->
+
+            <div class="modal fade" id="addLocationModal" tabindex="-1" aria-labelledby="addLocationModal" aria-hidden="true">
+
+                <div class="modal-dialog">
+                    
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title">Add new location</h5>
+
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                        </div>
+
+                        <div class="modal-body">
+
+                            <form action="js/script.js" id="addLocationForm">
+
+                                <div class="mb-3">
+                                    <label for="addLocationName" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="addLocationName" aria-describedby="addLocationName-help" name="addLocationName">
+                                    <div id="addLocationName-help" class="form-text"></div>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="add-submit-btn" class="btn btn-primary">Submit</button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Edit location modal-->
+
+            <div class="modal fade" id="editLocationModal" tabindex="-1" aria-labelledby="editLocationModal" aria-hidden="true">
+
+                <div class="modal-dialog">
+                    
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title">Edit location</h5>
+
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                        </div>
+
+                        <div class="modal-body">
+
+                            <form action="js/script.js" id="editLocationForm">
+
+                                <div class="mb-3">
+                                    <label for="editLocationName" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="editLocationName" aria-describedby="editLocationName-help" name="editLocationName">
+                                    <div id="editLocationName-help" class="form-text"></div>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="add-submit-btn" class="btn btn-primary">Submit</button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
 
         </main>
 

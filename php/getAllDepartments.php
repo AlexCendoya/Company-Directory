@@ -36,7 +36,7 @@
 
 	//$query = 'SELECT id, name, locationID FROM department';
 	
-	/*	
+		/*
 	$query = '	SELECT p.lastName, p.firstName, p.jobTitle, p.email, 
 				d.name as department, 
 				l.name as location 
@@ -46,8 +46,8 @@
 				LEFT JOIN location l 
 				ON (l.id = d.locationID) 
 				ORDER BY p.lastName, p.firstName, d.name, l.name';	
-	*/
 
+	*/
 	$query = '	SELECT d.id, d.name, 
 				l.name as location
 				FROM department d
