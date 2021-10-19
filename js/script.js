@@ -51,6 +51,8 @@ $(document).ready( function () {
 
 					});
 
+					//add employee function
+
 					//edit button
 
 					$(".editEmployee-btn").click(function() {
@@ -154,13 +156,14 @@ $(document).ready( function () {
 					});
 
 
-					$("#addDepartment-btn").submit(function() {
+					$("#addDepartment-submit-btn").click(function() {
+
 
 						$.ajax({
 							url: "php/insertDepartment.php",
 							type: 'POST',
 							data: {
-								name: $("#addDepartmentName"),
+								name: $("#addDepartmentName").val(),
 								locationID: $("#addDepartmentLocation").val(),
 							},
 							dataType: "json",
@@ -184,6 +187,8 @@ $(document).ready( function () {
 								console.log(jqXHR);
 							}
 						});
+
+
 					});
 
 
@@ -251,7 +256,7 @@ $(document).ready( function () {
 		dataType: "json",
 		success: function(result) {
 
-			//console.log(result);
+			console.log(result);
 
 			if (result.status.name == "ok") {
 
@@ -276,6 +281,7 @@ $(document).ready( function () {
 						$('#editEmployeeLocation').append(`<option value="${location.id}">${location.name}</option>`);
 						$('#editDepartmentLocation').append(`<option value="${location.id}">${location.name}</option>`);
 
+						//Add a new location
 
 						$("#addLocation-btn").click(function() {
 
@@ -283,11 +289,50 @@ $(document).ready( function () {
 	
 						});
 
+						$("#addLocation-submit-btn").click(function() {
+
+							//in progress...
+							$.ajax({
+								url: "php/insertLocation.php",
+								type: 'POST',
+								data: {
+									name: $("#addLocationName").val(),
+								},
+								dataType: "json",
+								success: function(result) {
+	
+									console.log(result);
+	
+									var newLocation= result['data'];
+	
+									let $tr = $('<tr>').append(
+
+										$('<td>').text(newLocation.name),
+										$('<td>').html(
+											'<button class="editLocation-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
+											'<button class="deleteLocation-btn btn text-danger" title="delete" data-id="' + newLocation.id + '"><i class="fas fa-trash-alt"></i></button>'
+										),
+									).appendTo('#locationTable');
+	
+								},
+								error: function(jqXHR, textStatus, errorThrown) {
+									console.log(jqXHR);
+								}
+							});
+	
+	
+						});
+
+
+						//Edit location
+
 						$(".editLocation-btn").click(function() {
 
 							$("#editLocationModal").modal("show");
 	
 						});
+
+						//Edit button
 
 						$(".deleteLocation-btn").click(function() {
 
