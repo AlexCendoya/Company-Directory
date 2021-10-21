@@ -9,7 +9,7 @@
 	error_reporting(E_ALL);
 
 	$executionStartTime = microtime(true);
-//this includes the login details
+	//this includes the login details
 	include("config.php");
 
 	header('Content-Type: application/json; charset=UTF-8');
@@ -35,9 +35,9 @@
 	// SQL statement accepts parameters and so is prepared to avoid SQL injection.
 	// $_REQUEST used for development / debugging. Remember to change to $_POST for production
 
-	$query = $conn->prepare('INSERT INTO location (name, locationID) VALUES(?,?)');
+	$query = $conn->prepare('INSERT INTO location (name) VALUES (?)');
 
-	$query->bind_param("si", $_POST['name'], $_POST['locationID']);
+	$query->bind_param("s", $_POST['name']);
 
 	$query->execute();
 	
@@ -60,7 +60,8 @@
 	$output['status']['name'] = "ok";
 	$output['status']['description'] = "success";
 	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-	$output['data'] = [];
+	$output['data']['name'] = $_POST['name'];
+	$output['data']['id'] = $conn->insert_id;
 	
 	mysqli_close($conn);
 
