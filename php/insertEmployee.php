@@ -9,7 +9,7 @@
 	error_reporting(E_ALL);
 
 	$executionStartTime = microtime(true);
-//this includes the login details
+	//this includes the login details
 	include("config.php");
 
 	header('Content-Type: application/json; charset=UTF-8');
@@ -35,9 +35,9 @@
 	// SQL statement accepts parameters and so is prepared to avoid SQL injection.
 	// $_REQUEST used for development / debugging. Remember to change to $_POST for production
 
-	$query = $conn->prepare('INSERT INTO personnel (firstname, lastname, jobtitle, email, department, locationID) VALUES (?,?,?,?,?,?)');
+	$query = $conn->prepare('INSERT INTO personnel (firstName, lastName, jobTitle, email, departmentID) VALUES (?,?,?,?,?)');
 
-	$query->bind_param("sssssi", $_POST['firstname'], $_POST['lastname'], $_POST['jobtitle'], $_POST['email'], $_POST['department'], $_POST['locationID']);
+	$query->bind_param("ssssi", $_POST['firstname'], $_POST['lastname'], $_POST['jobTitle'], $_POST['email'], $_POST['departmentID']);
 
 	$query->execute();
 	
@@ -60,7 +60,15 @@
 	$output['status']['name'] = "ok";
 	$output['status']['description'] = "success";
 	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-	$output['data'] = [];
+	$output['data']['id'] = $query->insert_id;
+	$output['data']['firstName'] = $_POST['firstname'];
+	$output['data']['lastName'] = $_POST['lastname'];
+	$output['data']['jobTitle'] = $_POST['jobTitle'];
+	$output['data']['email'] = $_POST['email'];
+	$output['data']['departmentName'] = $_POST['departmentName'];
+	$output['data']['locationName'] = $_POST['locationName'];
+	//double-check this bit
+
 	
 	mysqli_close($conn);
 

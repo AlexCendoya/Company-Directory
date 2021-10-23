@@ -1,29 +1,26 @@
+/*navbar*/
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
+}
+
+/*tables*/
+
+td {
+    display: table-cell;
+    vertical-align: middle;
+}
 
 
-    /*navbar*/
+/*preloader*/
 
-    .navbar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 50;
-    }
-
-    /*tables*/
-
-
-	td {
-		display: table-cell;
-    	vertical-align: middle;
-	}
-
-
-    /*preloader*/
-
-    #preloader {
-        background: transparent url(loading-17.gif) no-repeat center center;
-        height: 100vh;
-        width: 100%;
-        position: fixed;
-        z-index: 100;
-    }
+#preloader {
+    background: transparent url(loading-17.gif) no-repeat center center;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    z-index: 100;
+}

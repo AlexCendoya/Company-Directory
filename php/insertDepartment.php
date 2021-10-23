@@ -9,7 +9,7 @@
 	error_reporting(E_ALL);
 
 	$executionStartTime = microtime(true);
-//this includes the login details
+	//this includes the login details
 	include("config.php");
 
 	header('Content-Type: application/json; charset=UTF-8');
@@ -35,12 +35,12 @@
 	// SQL statement accepts parameters and so is prepared to avoid SQL injection.
 	// $_REQUEST used for development / debugging. Remember to change to $_POST for production
 
-	$query = $conn->prepare('INSERT INTO department (name, locationID) VALUES(?,?)');
+	$query = $conn->prepare('INSERT INTO department (name, locationID) VALUES(?, ?)');
 
 	$query->bind_param("si", $_POST['name'], $_POST['locationID']);
 
 	$query->execute();
-	
+
 	if (false === $query) {
 
 		$output['status']['code'] = "400";
@@ -60,8 +60,9 @@
 	$output['status']['name'] = "ok";
 	$output['status']['description'] = "success";
 	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-	$output['data']['name'] = $_POST['name'];
-	$output['data']['id'] = $_POST['locationID'];
+	$output['data']['id'] = $query->insert_id;
+	$output['data']['departmentName'] = $_POST['name'];
+	$output['data']['locationName'] = $_POST['locationName'];
 	
 	mysqli_close($conn);
 

@@ -1,6 +1,10 @@
 $(document).ready( function () {
 
-
+	
+	/***************/
+	/***PERSONNEL***/
+	/***************/
+	
 	
 	//Populate, edit and delete personnel table
 	
@@ -16,8 +20,11 @@ $(document).ready( function () {
 
 				var all = result['data'];
 				
+				//console.log(all);
+				
 				$(function() {
-					$.each(all, function(i, personnel) {
+					
+					$.when($.each(all, function(i, personnel) {
 						let $tr = $('<tr>').append(
 							$('<td class="personnelLastName">').text(personnel.lastName),
 							$('<td class="personnelFirstName">').text(personnel.firstName),
@@ -29,8 +36,39 @@ $(document).ready( function () {
 								'<button class="editEmployee-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
 								'<button class="deletePersonnel-btn btn text-danger" title="delete" data-id="' + personnel.id + '"><i class="fas fa-trash-alt"></i></button>'
 							),
-							$('<span style="display:none" class="personnelEmail">').text(personnel.email),
-						).appendTo('#personnelTable');
+							$('<span style="display:none" class="personnelEmail">').text(personnel.email)
+						).appendTo('#personnelTable tbody');
+						
+					})).then(function() {
+
+						$("#personnelTable").DataTable({
+							scrollY: 400,
+							initComplete: function () {
+								this.api().columns().every( function () {
+									var column = this;
+
+									var some = column.index();
+									if (column.index() == 4) return;
+									
+									var select = $('<select><option value=""></option></select>')
+										.appendTo( $(column.footer()).empty() )
+										.on( 'change', function () {
+											var val = $.fn.dataTable.util.escapeRegex(
+												$(this).val()
+											);
+					 
+											column
+												.search( val ? '^'+val+'$' : '', true, false )
+												.draw();
+										} );
+					 
+									column.data().unique().sort().each( function ( d, j ) {
+										select.append( '<option value="'+d+'">'+d+'</option>' )
+									} );
+								} );
+							}
+						}); 
+
 					});
 					
 					$(".info-btn").click(function() {
@@ -46,36 +84,32 @@ $(document).ready( function () {
 
 
 				});
-			
-
-
 			}
-
-
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
 			console.log(jqXHR);
 		}
+		
 	});
-
 
 	//add button
 
 	$("#addEmployee-btn").click(function() {
 
 		$("#addEmployeeModal").modal("show");
+		
 
 	});
 
 	$("#addEmployee-submit-btn").click(function() {
 
-		if (($("#addEmployeeFirstName").val() == "" ) || ($("#addEmployeeLastName").val() == "" ) || ($("#addEmployeeJobTitle").val() == "" )|| ($("#addEmployeeEmail").val() == "" )) {
+		if (($("#addEmployeeFirstName").val() == "" ) || ($("#addEmployeeLastName").val() == "" ) || ($("#addEmployeeEmail").val() == "" )) {
 		
 			alert( "Please enter all the required fields");
 			
 			return false;
 
-			//But what if you want to change just one or two fields?
+			// not sure if job title is important so for the moment I get rid of this ($("#addEmployeeJobTitle").val() == "" )||
 
 		}
 
@@ -85,15 +119,46 @@ $(document).ready( function () {
 			data: {
 				firstname: $("#addEmployeeFirstName").val(),
 				lastname: $("#addEmployeeLastName").val(),
-				jobtitle: $("#addEmployeeJobTitle").val(),
+				jobTitle: $("#addEmployeeJobTitle").val(),
 				email: $("#addEmployeeEmail").val(),
-				department: $("#addEmployeeDepartment").val(),
+				departmentID: $("#addEmployeeDepartment").val(),
+				departmentName: $("#addEmployeeDepartment option:selected").text(),
 				locationID: $("#addEmployeeLocation").val(),
+				locationName: $("#addEmployeeLocation option:selected").text(),
+				//double-check if all of these are necessary or should be changed
 			},
 			dataType: "json",
 			success: function(result) {
 
+				$("#addEmployeeModal").modal("hide");
+
+				$("#addEmployeeFirstName").val("");
+				$("#addEmployeeLastName").val("");
+				$("#addEmployeeJobTitle").val("");
+				$("#addEmployeeEmail").val("");
+
 				console.log(result);
+
+				var newEmployee = result['data'];
+
+				let $tr = $('<tr data-id="' + newEmployee.id + '">').append(
+
+					$('<td class="personnelLastName">').text(newEmployee.lastName),
+					$('<td class="personnelFirstName">').text(newEmployee.firstName),
+					$('<td class="personnelDepartment">').text(newEmployee.departmentName),
+					$('<td class="personnelLocation">').text(newEmployee.locationName), //It shows up immediately, but the location changes after refreshing!
+					$('<td>').html(
+						'<button class="info-btn btn text-primary" title="view"><i class="fas fa-info"></i></button>' + 
+						'<button class="editEmployee-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
+						'<button class="deletePersonnel-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
+					)
+
+				).appendTo('#personnelTable');
+
+
+				registerEditDeleteEmployeeButtons();
+
+
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log(jqXHR);
@@ -103,51 +168,143 @@ $(document).ready( function () {
 		});
 	});
 
-	//edit button
+
+
+	//Edit personnel
+
+	var $currentPersonnelRow;
 
 	$(".editEmployee-btn").click(function() {
 
-		$("#editEmployeeModal").modal("show");
-
-	});
-					
-	$(".deletePersonnel-btn").click(function() {
-
-		//alert( $(this).data("id") );
-		let p = confirm( "Are you sure you would like to delete this personnel?" );
+		if (($("#editEmployeeFirstName").val() == "" ) || ($("#editEmployeeLastName").val() == "" ) || ($("#editEmployeeEmail").val() == "" )) {
 		
-		if (p == true) {
+			alert( "Please enter all the required fields");
 			
-			$.ajax({
-				url: "php/deletePersonnelByID.php",
-				type: 'POST',
-				data: {
-					id: $(this).data("id"),
-				},
-				dataType: "json",
-				success: function(result) {
+			return false;
 
-					//console.log(result);
+			// not sure if job title is important so for the moment I get rid of this ($("#editEmployeeJobTitle").val() == "" )||
 
-					if (result.status.name == "ok") {
-
-						alert("Deleted");
-
-					}
-
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					console.log(jqXHR);
-					
-				}
-
-			});
-			
 		}
-		
+
+		$.ajax({
+			url: "php/editPersonnel.php",
+			type: 'POST',
+			data: {
+				firstname: $("#editEmployeeFirstName").val(),
+				lastname: $("#editEmployeeLastName").val(),
+				jobTitle: $("#editEmployeeJobTitle").val(),
+				email: $("#editEmployeeEmail").val(),
+				departmentID: $("#editEmployeeDepartment").val(),
+				departmentName: $("#editEmployeeDepartment option:selected").text(),
+				locationID: $("#editEmployeeLocation").val(),
+				locationName: $("#editEmployeeLocation option:selected").text(),
+				id: $currentPersonnelRow.data("id"),
+				//double-check if all of these are necessary or should be changed
+			},
+			dataType: "json",
+			success: function(result) {
+
+				$("#editEmployeeModal").modal("hide");
+
+				$("#editEmployeeFirstName").val("");
+				$("#editEmployeeLastName").val("");
+				$("#editEmployeeJobTitle").val("");
+				$("#editEmployeeEmail").val("");
+
+				console.log(result);
+
+				var editEmployee = result['data'];
+				
+				$currentPersonnelRow.find("td.personnelLastName").html(editEmployee.lastName);
+				$currentPersonnelRow.find("td.personnelFirstName").html(editEmployee.firstName); 
+				$currentPersonnelRow.find("td.personnelDepartment").html(editEmployee.departmentName);  
+				$currentPersonnelRow.find("td.personnelLocation").html(editEmployee.locationName);
+
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(jqXHR);
+				
+			}
+
+		});
+
+
 	});
 
+	function registerEditDeleteEmployeeButtons() {
 
+		$(".editEmployee-btn").unbind("click");
+		
+		$(".deletePersonnel-btn").unbind("click");
+
+		//Edit personnel
+
+		$(".editEmployee-btn").click(function() {
+			
+			$currentPersonnelRow = $(this).closest('tr');
+			
+			$("#editEmployeeModal").modal("show");
+			//You left it here
+	
+			$('#editEmployeeLasttName').val( $(this).closest('tr').find('.personnelLastName"').text() );
+			$('#editEmployeeFirstName').val( $(this).closest('tr').find('.personnelFirstName"').text() );
+			//$('#editEmployeeFirstName').val( $(this).closest('tr').find('.personnelDepartment"').text() );
+			//$('#editEmployeeFirstName').val( $(this).closest('tr').find('.personnelLocation"').text() );
+			
+			//$('#editDepartmentLocation').val( $('#editDepartmentLocation option:contains(' + $(this).closest('tr').find('.location-name').text() + ')').val() );
+			
+		});
+
+
+		$(".deletePersonnel-btn").click(function() {
+
+			$currentPersonnelRow = $(this).closest('tr');
+	
+			let p = confirm( "Are you sure you would like to delete this personnel?" );
+			
+			if (p == true) {
+				
+				$.ajax({
+					url: "php/deletePersonnelByID.php",
+					type: 'POST',
+					data: {
+						id: $currentPersonnelRow.data("id"),
+					},
+					dataType: "json",
+					success: function(result) {
+	
+						//console.log(result);
+	
+						if (result.status.name == "ok") {
+	
+							alert("Deleted");
+	
+						}
+	
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(jqXHR);
+						
+					}
+	
+				});
+				
+			}
+			
+		});
+
+
+	}
+
+
+					
+	
+	
+	/***************/
+	/**DEPARTMENTS**/
+	/***************/
+	
+	
 	//Populate, edit and delete department table
 
 	$.ajax({
@@ -156,30 +313,61 @@ $(document).ready( function () {
 		dataType: "json",
 		success: function(result) {
 
-			console.log(result);
+			//console.log(result);
 
 			if (result.status.name == "ok") {
 
 				var departments = result['data'];
 
 				$(function() {
-					$.each(departments, function(i, department) {
+					
+					$.when($.each(departments, function(i, department) {
 
 						let $tr = $('<tr data-id="' + department.id + '">').append(
 							$('<td class="department-name">').text(department.name),
-							$('<td>').text(department.location), //should I add class here?
+							$('<td class="location-name">').text(department.location),
 							$('<td>').html(
 								'<button class="editDepartment-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
 								'<button class="deleteDepartment-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
 							)
-						).appendTo('#departmentsTable');
+						).appendTo('#departmentsTable tbody');
 						
 						//populate dropdown menu in add and edit modals
-
+						
 						$('#addEmployeeDepartment').append(`<option value="${department.id}">${department.name}</option>`);
 						$('#editEmployeeDepartment').append(`<option value="${department.id}">${department.name}</option>`);
 
 
+					})).then( function() {
+						
+						$("#departmentsTable").DataTable({
+							scrollY: 400,
+							initComplete: function () {
+								this.api().columns().every( function () {
+									var column = this;
+
+									var some = column.index();
+									if (column.index() == 2) return;
+
+									var select = $('<select><option value=""></option></select>')
+										.appendTo( $(column.footer()).empty() )
+										.on( 'change', function () {
+											var val = $.fn.dataTable.util.escapeRegex(
+												$(this).val()
+											);
+					 
+											column
+												.search( val ? '^'+val+'$' : '', true, false )
+												.draw();
+										} );
+					 
+									column.data().unique().sort().each( function ( d, j ) {
+										select.append( '<option value="'+d+'">'+d+'</option>' )
+									} );
+								} );
+							}
+						}); 
+						
 					});
 
 					registerEditDeleteDepartmentButtons();
@@ -212,19 +400,19 @@ $(document).ready( function () {
 
 		}
 
-
 		$.ajax({
 			url: "php/insertDepartment.php",
 			type: 'POST',
 			data: {
 				name: $("#addDepartmentName").val(),
 				locationID: $("#addDepartmentLocation").val(),
+				locationName: $("#addDepartmentLocation option:selected").text(),
+				//Is this last one necessary?
 			},
 			dataType: "json",
 			success: function(result) {
 
 				$("#addDepartmentModal").modal("hide");
-				
 				$("#addDepartmentName").val("");
 
 				console.log(result);
@@ -232,8 +420,8 @@ $(document).ready( function () {
 				var newDepartment = result['data'];
 
 				let $tr = $('<tr data-id="' + newDepartment.id + '">').append(
-					$('<td class="department-name">').text(newDepartment.name),
-					$('<td>').text(newDepartment.location), //should I include class here too?
+					$('<td class="department-name">').text(newDepartment.departmentName),
+					$('<td class="location-name">').text(newDepartment.locationName), 
 					$('<td>').html(
 						'<button class="editDepartment-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
 						'<button class="deleteDepartment-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
@@ -246,15 +434,16 @@ $(document).ready( function () {
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log(jqXHR);
 			}
+			
 		});
-
 
 	});
 
-	//Edit department --- in progress
+	//Edit department
 
+	var $currentDepartmentRow;
 
-	$("#editDepartment-submit-btn").click(function() {
+	$("#editDepartment-submit-btn").click( function() {
 		
 		if( $("#editDepartmentName").val() == "" ) {
 			
@@ -263,17 +452,15 @@ $(document).ready( function () {
 			return false;
 
 		}
-			
-		var $editDepartmentButton = $(this);
 		
-
 		$.ajax({
 			url: "php/editDepartment.php",
 			type: 'POST',
 			data: {
 				name: $("#editDepartmentName").val(),
-				id: $("#editDepartmentLocation").val(),
-				 /*$currentEditDepartmentID.data("id")*/
+				locationID: $("#editDepartmentLocation").val(),
+				locationName: $("#editDepartmentLocation option:selected").text(),
+				id: $currentDepartmentRow.data("id"),
 			},
 			dataType: "json",
 			success: function(result) {
@@ -281,29 +468,24 @@ $(document).ready( function () {
 				$("#editDepartmentModal").modal("hide");
 				
 				$("#editDepartmentName").val("");
-
-				console.log(result);
+				
+				$("#editDepartmentLocation").val(1);
 
 				var editDepartment = result['data'];
 				
-				//update row's entry with new value
+				$currentDepartmentRow.find("td.department-name").html( editDepartment.departmentName ); 
 				
-				//$currentEditDepartmentID.find("td.department-name").html(editDepartment.name);
-
-				$("#editDepartmentLocation").find("td.department-name").html(editDepartment.name); //Attempt with the ID from the dropdown
+				$currentDepartmentRow.find("td.location-name").html( editDepartment.locationName );
+				
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log(jqXHR);
 			}
 		});
 
-
-	},
-
-
-
+	});
+	
 	function registerEditDeleteDepartmentButtons() {
-
 
 		$(".editDepartment-btn").unbind("click");
 		
@@ -311,27 +493,24 @@ $(document).ready( function () {
 
 		//Edit department
 
-
-
 		$(".editDepartment-btn").click(function() {
-
+			
+			$currentDepartmentRow = $(this).closest('tr');
+			
 			$("#editDepartmentModal").modal("show");
 	
 			$('#editDepartmentName').val( $(this).closest('tr').find('.department-name').text() );
-						/*
-			$currentEditDepartmentID = $(this).closest('tr');
-					*/
-	
+			
+			$('#editDepartmentLocation').val( $('#editDepartmentLocation option:contains(' + $(this).closest('tr').find('.location-name').text() + ')').val() );
+			
 		});
 
-
-
-		//Delete button
+		//Delete department button
 			
 		$(".deleteDepartment-btn").click(function() {
+			
+			$currentDepartmentRow = $(this).closest('tr');
 
-			var $deleteDepartmentButton = $(this);
-		
 			let p = confirm( "Are you sure you would like to delete this department?" );
 			
 			if (p == true) {
@@ -340,18 +519,16 @@ $(document).ready( function () {
 					url: "php/deleteDepartmentByID.php",
 					type: 'POST',
 					data: {
-						id: $deleteDepartmentButton.parent().parent().data("id"),
-						/*id: $(this).data("id"),*/
+						id: $currentDepartmentRow.data("id"),
 					},
 					dataType: "json",
 					success: function(result) {
 
-						//console.log(result);
 
 						if (result.status.name == "ok") {
 
-							alert("Deleted");
-
+							$currentDepartmentRow.remove();
+							
 						} else if (result.status.name == "violation") {
 								
 							alert("Cannot delete...");
@@ -368,9 +545,14 @@ $(document).ready( function () {
 			}
 			
 		});
-
-	}),
-
+	
+	}
+	
+	
+	/**************/
+	/***LOCATION***/
+	/**************/
+	
 
 	//Populate, edit and delete location table
 
@@ -388,29 +570,31 @@ $(document).ready( function () {
 
 				$(function() {
 					
-					$.each(locations, function(i, location) {
+					$.when($.each(locations, function(i, location) {
 												
 						let $tr = $('<tr data-id="' + location.id + '">').append(
 							$('<td class="location-name">').text(location.name),
 							$('<td>').html(
 								'<button class="editLocation-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
 								'<button class="deleteLocation-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
-							),
-
-						).appendTo('#locationTable');
+							)
+						).appendTo('#locationTable tbody');
 
 						//populate dropdown menu in add and edit modals
 
 						$('#addEmployeeLocation').append(`<option value="${location.id}">${location.name}</option>`);
-						$('#addDepartmentLocation').append(`<option value="${location.id}">${location.name}</option>`);
 						$('#editEmployeeLocation').append(`<option value="${location.id}">${location.name}</option>`);
+						
+						$('#addDepartmentLocation').append(`<option value="${location.id}">${location.name}</option>`);						
 						$('#editDepartmentLocation').append(`<option value="${location.id}">${location.name}</option>`);
 
+					})).then( function() {
+						
+						$("#locationTable").DataTable(); 
+						
 					});
 					
 					registerEditDeleteLocationButtons();
-
-
 
 				});
 
@@ -464,12 +648,10 @@ $(document).ready( function () {
 					$('<td>').html(
 						'<button class="editLocation-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
 						'<button class="deleteLocation-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
-					),
+					)
 				).appendTo('#locationTable');
 				
 				registerEditDeleteLocationButtons();
-
-
 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -479,7 +661,7 @@ $(document).ready( function () {
 
 	});
 	
-	var $currentEditLocationID;
+	var $currentLocationRow;
 	
 	$("#editLocation-submit-btn").click(function() {
 		
@@ -491,14 +673,12 @@ $(document).ready( function () {
 
 		}
 		
-		var $editLocationButton = $(this);
-		
 		$.ajax({
 			url: "php/editLocation.php",
 			type: 'POST',
 			data: {
 				name: $("#editLocationName").val(),
-				id: $currentEditLocationID.data("id"),
+				id: $currentLocationRow.data("id"),
 			},
 			dataType: "json",
 			success: function(result) {
@@ -513,10 +693,8 @@ $(document).ready( function () {
 				
 				//update row's entry with new value
 				
-				$currentEditLocationID.find("td.location-name").html( editLocation.name );
-				$("table.table").DataTable({
-					"paging": false
-				});
+				$currentLocationRow.find("td.location-name").html( editLocation.name );
+			
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log(jqXHR);
@@ -526,8 +704,7 @@ $(document).ready( function () {
 
 	});
 	
-	function registerEditDeleteLocationButtons() {
-	
+	function registerEditDeleteLocationButtons() {	
 		
 		$(".editLocation-btn").unbind("click");
 		
@@ -537,11 +714,12 @@ $(document).ready( function () {
 
 		$(".editLocation-btn").click(function() {
 
+			$currentLocationRow = $(this).closest('tr');
+			
 			$("#editLocationModal").modal("show");
 			
 			$('#editLocationName').val( $(this).closest('tr').find('.location-name').text() );
 			
-			$currentEditLocationID = $(this).closest('tr');
 
 		});
 
@@ -549,7 +727,7 @@ $(document).ready( function () {
 
 		$(".deleteLocation-btn").click(function() {
 			
-			var $deleteLocationButton = $(this);
+			$currentLocationRow = $(this).closest('tr');
 
 			let p = confirm( "Are you sure you would like to delete this location?" );
 
@@ -559,7 +737,7 @@ $(document).ready( function () {
 					url: "php/deleteLocationByID.php",
 					type: 'POST',
 					data: {
-						id: $deleteLocationButton.parent().parent().data("id"),
+						id: $currentLocationRow.data("id"),
 					},
 					dataType: "json",
 					success: function(result) {
@@ -568,7 +746,7 @@ $(document).ready( function () {
 						
 						if (result.status.name == "ok") {
 
-							$deleteLocationButton.parent().parent().remove();
+							$currentLocationRow.remove();
 
 						} else if (result.status.name == "violation") {
 							
@@ -590,11 +768,5 @@ $(document).ready( function () {
 		
 	}
 
-	//Database settings
-
-	$(".table").DataTable();
-
-	//go through this again: https://datatables.net/forums/discussion/50329/first-time-using-datatables-no-data-available-in-table
-	
 });
 

@@ -12,8 +12,7 @@
         <link rel="shortcut icon" href="7830542_human_resources_search_employees_icon.png" type="image/x-icon" />
 
         <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.11.3/datatables.min.css"/>
- 
+        <link rel="stylesheet" type="text/css" href="css/datatables.min.css"/>
  
         <link rel="stylesheet" href="css/all.css">
         <link rel="stylesheet" href="css/fontawesome.css">       
@@ -58,21 +57,7 @@
             -->
 			<br/>
 
-            <div>
-                <!--class="tab-content py-3"-->
-
-
-                <div class="d-flex justify-content-between mb-3">
-
-
-                    <!--class="btn-group ml-3" role="group"-->
-                    <div>
-
-                        <button type="button" id="filter-btn" class="btn btn-dark" data-toggle="modal" data-target="#filter-modal" aria-expanded="false" aria-controls="filter-collapse" title="filter"><i class="fas fa-filter"></i></button>
-                    </div>
-
-                </div>
-                
+            <div>               
 
                 <!--tables-->
 
@@ -81,26 +66,40 @@
 
                     <div class="card-header bg-dark text-white">
                         <table>
-                            <tr>
-                                <h4>Personnel</h4>
-
-                                <button type="button" id="addEmployee-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button>
-
+                            <tr class="card-title">
+                                <td>
+                                    <h4>Personnel</h4>
+                                </td>
+                                
+                                <td>
+                                    <button type="button" id="addEmployee-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button>
+                                </td>
                             </tr>
                         </table>
                     </div>
 
-                    <div class="card-body">
+                    <div class="card-body">						
                         <table id="personnelTable" class="table table-striped table-bordered">
-
                             <thead>
-
-                                <th>Last Name</th>
-                                <th>First Name</th>
-                                <th>Department</th>
-                                <th>Location</th>
-                                <th>Options</th>
+                                <tr>
+                                    <th>Last Name</th>
+                                    <th>First Name</th>
+                                    <th>Department</th>
+                                    <th>Location</th>
+                                    <th>Options</th>
+                                </tr>
                             </thead>
+							<tbody>
+							</tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
 
@@ -112,10 +111,13 @@
 
                         <table>
                             <tr>
-                                <h4>Departments</h4>
-
-                                <button type="button" id="addDepartment-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button>
-
+                                <td>
+                                    <h4>Departments</h4>
+                                </td>
+                                
+                                <td>
+                                    <button type="button" id="addDepartment-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button>
+                                </td>
                             </tr>
                         </table>
 
@@ -123,14 +125,25 @@
 
                     <div class="card-body">
                         <table id="departmentsTable" class="table table-striped table-bordered">
-
                             <thead>
-                                <th>Department</th>
-                                <th>Location</th>
-                                <th>Options</th>
-                            </thead>
-                        </table>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Location</th>
+                                    <th>Options</th>
+                                </tr>
 
+                            </thead>
+							<tbody>
+							</tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                                
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
 
@@ -140,9 +153,13 @@
                         
                         <table>
                             <tr>
-                                <h4>Location</h4>
-        
-                                <button type="button" id="addLocation-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button>
+                                <td>
+                                    <h4>Location</h4>  
+                                </td>
+                                
+                                <td>
+                                    <button type="button" id="addLocation-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button>
+                                </td>
                             </tr>
                         </table>
 
@@ -151,11 +168,17 @@
 
                     <div class="card-body">
                         <table id="locationTable" class="table table-striped table-bordered">
-
                             <thead>
-                                <th>Location</th>
-                                <th>Options</th>
+                                <tr>
+                                    <th>Location</th>
+                                    <th>Options</th>
+                                </tr>
+
                             </thead>
+                            <tbody>
+							</tbody>
+                            <tfoot>
+                            </tfoot>
                         </table>
                     </div>
 
@@ -248,37 +271,38 @@
 
                             <form id="addEmployeeForm">
 
-                                <div class="mb-3">
+                                <!--class="mb-3"-->
+                                <div>
                                     <label for="addEmployeeFirstName" class="form-label">First Name</label>
                                     <input type="text" class="form-control" id="addEmployeeFirstName" aria-describedby="addEmployeeFirstName-help" name="addEmployeeFirstName">
-                                    <div id="editEmployeeFirstName-help" class="form-text"></div>
+                                    <div id="addEmployeeFirstName-help" class="form-text"></div>
                                 </div>
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="addEmployeeLastName" class="form-label">Last Name</label>
                                     <input type="text" class="form-control" id="addEmployeeLastName" aria-describedby="addEmployeeLastName-help" name="addEmployeeLastName">
                                     <div id="addEmployeeLastName-help" class="form-text"></div>
                                 </div>
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="addEmployeeJobTitle" class="form-label">Job Title</label>
                                     <input type="text" class="form-control" id="addEmployeeJobTitle" aria-describedby="addEmployeeJobTitle-help" name="addEmployeeJobTitle">
                                     <div id="addEmployeeJobTitle-help" class="form-text"></div>
                                 </div>
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="addEmployeeEmail" class="form-label">Email</label>
                                     <input type="email" class="form-control" id="addEmployeeEmail" aria-describedby="addEmployeeEmail-help" name="addEmployeeEmail">
                                     <div id="addEmployeeEmail-help" class="form-text"></div>
                                 </div>
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="addEmployeeDepartment" class="form-label">Department</label>
                                     <select class="form-select" aria-label="Default select example" id="addEmployeeDepartment" name="addEmployeeDepartment" onchange="">
                                     </select>
                                 </div>
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="addEmployeeLocation" class="form-label">Location</label>
                                     <select class="form-select" aria-label="Default select example" id="addEmployeeLocation" name="addEmployeeLocation">
                                     </select>
@@ -319,37 +343,37 @@
 
                             <form id="editEmployeeForm">
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="editEmployeeFirstName" class="form-label">First Name</label>
                                     <input type="text" class="form-control" id="editEmployeeFirstName" aria-describedby="editEmployeeFirstName-help" name="editEmployeeFirstName">
                                     <div id="editEmployeeFirstName-help" class="form-text"></div>
                                 </div>
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="editEmployeeLastName" class="form-label">Last Name</label>
                                     <input type="text" class="form-control" id="editEmployeeLastName" aria-describedby="editEmployeeLastName-help" name="editEmployeeLastName">
                                     <div id="editEmployeeLastName-help" class="form-text"></div>
                                 </div>
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="editEmployeeJobTitle" class="form-label">Job Title</label>
                                     <input type="text" class="form-control" id="editEmployeeJobTitle" aria-describedby="editEmployeeJobTitle-help" name="editEmployeeJobTitle">
                                     <div id="editEmployeeJobTitle-help" class="form-text"></div>
                                 </div>
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="editEmployeeEmail" class="form-label">Email</label>
                                     <input type="email" class="form-control" id="editEmployeeEmail" aria-describedby="editEmployeeEmail-help" name="editEmployeeEmail">
                                     <div id="editEmployeeEmail-help" class="form-text"></div>
                                 </div>
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="editEmployeeDepartment" class="form-label">Department</label>
                                     <select class="form-select" aria-label="Default select example" id="editEmployeeDepartment" name="editEmployeeDepartment" onchange="">
                                     </select>
                                 </div>
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="editEmployeeLocation" class="form-label">Location</label>
                                     <select class="form-select" aria-label="Default select example" id="editEmployeeLocation" name="editEmployeeLocation">
                                     </select>
@@ -391,13 +415,13 @@
 
                             <form id="addDepartmentForm">
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="addtDepartmentName" class="form-label">Name</label>
                                     <input type="text" class="form-control" id="addDepartmentName" aria-describedby="addDepartmentName-help" name="addDepartmentName">
                                     <div id="addDepartmentName-help" class="form-text"></div>
                                 </div>
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="addDepartmentLocation" class="form-label">Location</label>
                                     <select class="form-select" aria-label="Default select example" id="addDepartmentLocation" name="addDepartmentLocation">
                                     </select>
@@ -438,13 +462,13 @@
 
                             <form id="editDepartmentForm">
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="editDepartmentName" class="form-label">Name</label>
                                     <input type="text" class="form-control" id="editDepartmentName" aria-describedby="editDepartmentName-help" name="editDepartmentName">
                                     <div id="editDepartmentName-help" class="form-text"></div>
                                 </div>
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="editDepartmentLocation" class="form-label">Location</label>
                                     <select class="form-select" aria-label="Default select example" id="editDepartmentLocation" name="editDepartmentLocation">
                                     </select>
@@ -455,7 +479,7 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button type="button" id="editDepartment-submit-btn" class="btn btn-primary">Submit</button>
+                            <button type="button" id="editDepartment-submit-btn" class="btn btn-primary">Update</button>
 
                         </div>
 
@@ -486,7 +510,7 @@
 
                             <form id="addLocationForm">
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="addLocationName" class="form-label">Name</label>
                                     <input type="text" class="form-control" id="addLocationName" aria-describedby="addLocationName-help" name="addLocationName">
                                     <div id="addLocationName-help" class="form-text"></div>
@@ -529,7 +553,7 @@
 
                             <form id="editLocationForm">
 
-                                <div class="mb-3">
+                                <div>
                                     <label for="editLocationName" class="form-label">Name</label>
                                     <input type="text" class="form-control" id="editLocationName" aria-describedby="editLocationName-help" name="editLocationName">
                                     <div id="editLocationName-help" class="form-text"></div>
@@ -553,11 +577,10 @@
         </main>
 
 
-        <script src="js/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>	
         <script src="js/bootstrap.min.js"></script>
-        
-        <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.11.3/datatables.min.js"></script>
+        <script type="text/javascript" src="js/datatables.min.js"></script>
         <script src="js/all.js"></script>
         <script src="js/script.js"></script>
 
