@@ -768,5 +768,23 @@ $(document).ready( function () {
 		
 	}
 
+
+	$('#option1, #option2, #option3').on('click', function (e) {
+		e.stopPropagation();
+		if (this.id == 'option1') {
+			$('#departmentsCard').collapse('hide');
+			$('#locationCard').collapse('hide');
+			$('#personnelCard').collapse('show');
+		} else if (this.id == 'option2') {
+			$('#personnelCard').collapse('hide');
+			$('#locationCard').collapse('hide');
+			$('#departmentsCard').collapse('show');
+		} else if (this.id == 'option3') {
+			$('#personnelCard').collapse('hide');
+			$('#departmentsCard').collapse('hide');
+			$('#locationCard').collapse('show');
+		}
+	})
+
 });
 
