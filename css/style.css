@@ -1,3 +1,11 @@
+body{
+	height: 100vh;
+}
+
+.card{
+	max-height: 100vh;
+}
+
 /*navbar*/
 
 .navbar {

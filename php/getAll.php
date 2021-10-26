@@ -35,7 +35,7 @@
 	// SQL does not accept parameters and so is not prepared
 
 	$query = '	SELECT p.id, p.lastName, p.firstName, p.jobTitle, p.email, 
-				d.name as department, 
+				d.name as department, d.id as departmentID,
 				l.name as location 
 				FROM personnel p 
 				LEFT JOIN department d 
