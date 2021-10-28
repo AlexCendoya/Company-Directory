@@ -17,6 +17,11 @@ body{
 
 /*tables*/
 
+.card-body .table thead tr th {
+    text-align: center;
+} 
+
+
 td {
     display: table-cell;
     vertical-align: middle;

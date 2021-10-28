@@ -20,7 +20,7 @@ $(document).ready( function () {
 
 				var all = result['data'];
 				
-				//console.log(all);
+				console.log(all);
 				
 				$(function() {
 					
@@ -36,7 +36,9 @@ $(document).ready( function () {
 								'<button class="editEmployee-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
 								'<button class="deletePersonnel-btn btn text-danger" title="delete""><i class="fas fa-trash-alt"></i></button>'
 							),
-							$('<span style="display:none" class="personnelEmail">').text(personnel.email)
+							$('<span style="display:none" class="personnelEmail">').text(personnel.email),
+							$('<span style="display:none" class="personnelJobTitle">').text(personnel.jobTitle)
+
 						).appendTo('#personnelTable tbody');
 						
 					})).then(function() {
@@ -48,7 +50,7 @@ $(document).ready( function () {
 						).then(function() {
 						
 							$("#personnelTable").DataTable({
-								responsive: true,  //buttons are not working in phone format, and some of the windows cannot be seen because of lack of space. Also, look for  modals for confirm/ reject and alert
+								responsive: true,  // Also, look for  modals for confirm/ reject and alert
 								scrollY: 400,
 								initComplete: function () {
 									this.api().columns().every( function () {
@@ -96,9 +98,9 @@ $(document).ready( function () {
 	$("#addEmployee-btn").click(function() {
 
 		$("#addEmployeeModal").modal("show");
-		
 
 	});
+
 
 	$("#addEmployee-submit-btn").click(function() {
 
@@ -115,6 +117,7 @@ $(document).ready( function () {
 		var getDepartmentName = $("#addEmployeeDepartment option:selected").text()
 		
 		//use a regular expression to obtain the string in brackets
+
 		var searchDepartmentName = getDepartmentName.match(/\((.*?)\)/);
 
 		var $locationName;
@@ -140,14 +143,14 @@ $(document).ready( function () {
 				departmentName: $departmentName,
 				//locationID: $("#addEmployeeLocation").val(),
 				locationName: $locationName,
-				//double-check if all of these are necessary or should be changed
+
 			},
 			dataType: "json",
 			success: function(result) {
 
 				$("#addEmployeeModal").modal("hide");
 
-				console.log(result);
+				//console.log(result);
 
 				var newEmployee = result['data'];
 
@@ -162,7 +165,8 @@ $(document).ready( function () {
 						'<button class="editEmployee-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
 						'<button class="deletePersonnel-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
 					),
-					$('<span style="display:none" class="personnelEmail">').text(newEmployee.email)
+					$('<span style="display:none" class="personnelEmail">').text(newEmployee.email),
+					$('<span style="display:none" class="personnelJobTitle">').text(newEmployee.jobTitle)
 
 				).appendTo('#personnelTable');
 				
@@ -249,9 +253,8 @@ $(document).ready( function () {
 				
 				$currentPersonnelRow.find("td.personnelLastName").html(editEmployee.lastName);
 				$currentPersonnelRow.find("td.personnelFirstName").html(editEmployee.firstName); 
-				$currentPersonnelRow.find("span.personnelEmail").html(editEmployee.email); 
-				//add the update of the jobtitle in info	
-				
+				$currentPersonnelRow.find("span.personnelEmail").html(editEmployee.email);
+				$currentPersonnelRow.find("span.personnelJobTitle").html(editEmployee.jobTitle); 
 				$currentPersonnelRow.find("td.personnelDepartment").html(editEmployee.departmentName);  
 				$currentPersonnelRow.find("td.personnelLocation").html(editEmployee.locationName);  
 
@@ -283,6 +286,7 @@ $(document).ready( function () {
 										
 			$('#employeeName').html( $currentPersonnelRow.find('.personnelFirstName').text() + " " + $currentPersonnelRow.find('.personnelLastName').text() );
 			$('#employeeEmail').html( $currentPersonnelRow.find('.personnelEmail').text() );
+			$('#employeeJobTitle').html( $currentPersonnelRow.find('.personnelJobTitle').text() );
 			$('#employeeDepartment').html( $currentPersonnelRow.find('.personnelDepartment').text() );
 			$('#employeeLocation').html( $currentPersonnelRow.find('.personnelLocation').text() );
 
@@ -295,20 +299,15 @@ $(document).ready( function () {
 			$currentPersonnelRow = $(this).closest('tr');
 			
 			$("#editEmployeeModal").modal("show");
-			//You left it here
 			
 			//alert($currentPersonnelRow.html());
 			
 			$('#editEmployeeLastName').val( $currentPersonnelRow.find('.personnelLastName').text() );
 			$('#editEmployeeFirstName').val( $currentPersonnelRow.find('.personnelFirstName').text() );
 			$('#editEmployeeEmail').val( $currentPersonnelRow.find('.personnelEmail').text() );
+			$('#editEmployeeJobTitle').val( $currentPersonnelRow.find('.personnelJobTitle').text() );
 			$('#editEmployeeDepartment').val( $currentPersonnelRow.find('.personnelDepartment').data("department-id"));
-			
-			//$('#editEmployeeFirstName').val( $(this).closest('tr').find('.personnelDepartment"').text() );
-			//$('#editEmployeeFirstName').val( $(this).closest('tr').find('.personnelLocation"').text() );
-			
-			//$('#editDepartmentLocation').val( $('#editDepartmentLocation option:contains(' + $(this).closest('tr').find('.location-name').text() + ')').val() );
-			
+
 		});
 
 
@@ -440,6 +439,7 @@ $(document).ready( function () {
 		}
 	});
 
+	
 	//Add a new department
 
 	$("#addDepartment-btn").click(function() {
@@ -655,7 +655,8 @@ $(document).ready( function () {
 						).then(function() {
 						
 							$("#locationTable").DataTable({
-								responsive: true
+								responsive: true,
+								scrollY: 400
 							}); 
 
 						});
@@ -835,7 +836,7 @@ $(document).ready( function () {
 		
 	}
 
-	$('#option1, #option2, #option3').on('click', function (e) {
+	$('#option1, #option2, #option3').on('click', function () {
 		//e.stopPropagation();
 		
 		hideAllCards();
@@ -849,7 +850,7 @@ $(document).ready( function () {
 	});
 	
 	
-	function hideAllCards(){
+	function hideAllCards() {
 		$('#departmentsCard').collapse('hide');
 		$('#locationCard').collapse('hide');
 		$('#personnelCard').collapse('hide');	
