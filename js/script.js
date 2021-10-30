@@ -1,6 +1,5 @@
 $(document).ready( function () {
 
-	
 	/***************/
 	/***PERSONNEL***/
 	/***************/
@@ -50,7 +49,7 @@ $(document).ready( function () {
 						).then(function() {
 						
 							$("#personnelTable").DataTable({
-								responsive: true,  // Also, look for  modals for confirm/ reject and alert
+								responsive: true,
 								scrollY: 400,
 								initComplete: function () {
 									this.api().columns().every( function () {
@@ -97,7 +96,9 @@ $(document).ready( function () {
 
 	$("#addEmployee-btn").click(function() {
 
-		$("#addEmployeeModal").modal("show");
+		$("#notEmptyPersonnelAlert1").html("");
+
+		$("#addPersonnelModal").modal("show");
 
 	});
 
@@ -106,7 +107,7 @@ $(document).ready( function () {
 
 		if (($("#addEmployeeFirstName").val() == "" ) || ($("#addEmployeeLastName").val() == "" ) || ($("#addEmployeeEmail").val() == "" )) {
 		
-			alert( "Please enter all the required fields");
+			$('#notEmptyPersonnelAlert1').html("<div class='alert alert-danger' role='alert'>Please enter all the required fields.</div>");
 			
 			return false;
 
@@ -148,7 +149,7 @@ $(document).ready( function () {
 			dataType: "json",
 			success: function(result) {
 
-				$("#addEmployeeModal").modal("hide");
+				$("#addPersonnelModal").modal("hide");
 
 				//console.log(result);
 
@@ -188,21 +189,38 @@ $(document).ready( function () {
 		});
 	});
 
-	
+
 	//Edit personnel
 
 	var $currentPersonnelRow;
 
-	$("#editEmployee-submit-btn").click(function() {
+	$("#editPersonnel-submit-btn").click(function() {
+
+		$("#editPersonnelModal").modal("hide");
+
+		$("#confirmEditPersonnelAlert").html("");
+
+		$("#confirmEditPersonnelModal").modal("show");
+
+	});
+
+
+	$("#cancelEditPersonnel-submit-btn").click(function() {
+
+		$("#confirmEditPersonnelModal").modal("hide");
+
+	});
+
+	$("#confirmEditPersonnel-submit-btn").click(function() {
 
 		if (($("#editEmployeeFirstName").val() == "" ) || ($("#editEmployeeLastName").val() == "" ) || ($("#editEmployeeEmail").val() == "" )) {
-		
-			alert( "Please enter all the required fields");
+
+			$('#notEmptyPersonnelAlert2').html("<div class='alert alert-danger' role='alert'>Please enter all the required fields.</div>");
 			
 			return false;
 
 			// not sure if job title is important so for the moment I get rid of this ($("#editEmployeeJobTitle").val() == "" )||
-
+			//add *!
 		}
 		
 		var getDepartmentName = $("#editEmployeeDepartment option:selected").text()
@@ -239,8 +257,6 @@ $(document).ready( function () {
 			dataType: "json",
 			success: function(result) {
 
-				$("#editEmployeeModal").modal("hide");
-
 				$("#editEmployeeFirstName").val("");
 				$("#editEmployeeLastName").val("");
 				$("#editEmployeeJobTitle").val("");
@@ -257,6 +273,9 @@ $(document).ready( function () {
 				$currentPersonnelRow.find("span.personnelJobTitle").html(editEmployee.jobTitle); 
 				$currentPersonnelRow.find("td.personnelDepartment").html(editEmployee.departmentName);  
 				$currentPersonnelRow.find("td.personnelLocation").html(editEmployee.locationName);  
+
+				$("#confirmEditPersonnelAlert").html("<div class='alert alert-success' role='alert'>Employee successfully edited.</div>");
+
 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -278,7 +297,7 @@ $(document).ready( function () {
 		
 		$(".deletePersonnel-btn").unbind("click");
 
-		//Edit personnel
+		//Personnel Info
 		
 		$(".info-btn").click(function() {
 			
@@ -294,13 +313,16 @@ $(document).ready( function () {
 
 		});
 
+
+		//Edit Personnel
+
 		$(".editEmployee-btn").click(function() {
 			
 			$currentPersonnelRow = $(this).closest('tr');
+
+			$("#notEmptyPersonnelAlert2").html("");
 			
-			$("#editEmployeeModal").modal("show");
-			
-			//alert($currentPersonnelRow.html());
+			$("#editPersonnelModal").modal("show");
 			
 			$('#editEmployeeLastName').val( $currentPersonnelRow.find('.personnelLastName').text() );
 			$('#editEmployeeFirstName').val( $currentPersonnelRow.find('.personnelFirstName').text() );
@@ -311,13 +333,17 @@ $(document).ready( function () {
 		});
 
 
+		//Delete Personnel
+
 		$(".deletePersonnel-btn").click(function() {
 
 			$currentPersonnelRow = $(this).closest('tr');
+
+			$('#confirmDeletePersonnelAlert').html("");
+
+			$('#confirmDeletePersonnelModal').modal("show");
 	
-			let p = confirm( "Are you sure you would like to delete this personnel?" );
-			
-			if (p == true) {
+			$('#confirmDeletePersonnel-submit-btn').click(function() {
 				
 				$.ajax({
 					url: "php/deletePersonnelByID.php",
@@ -331,11 +357,11 @@ $(document).ready( function () {
 						//console.log(result);
 	
 						if (result.status.name == "ok") {
-	
-							//alert("Deleted");
 							
 							$currentPersonnelRow.remove();
-	
+
+							$('#confirmDeletePersonnelAlert').html("<div class='alert alert-success' role='alert'>Employee successfully deleted.</div>");
+
 						}
 	
 					},
@@ -346,7 +372,13 @@ $(document).ready( function () {
 	
 				});
 				
-			}
+			});
+
+			$('#cancelDeletePersonnel-submit-btn').click(function() {
+
+				$('#confirmDeletePersonnelModal').modal("hide");
+
+			});
 			
 		});
 
@@ -444,6 +476,8 @@ $(document).ready( function () {
 
 	$("#addDepartment-btn").click(function() {
 
+		$("#notEmptyDepartmentAlert1").html("");
+
 		$("#addDepartmentModal").modal("show");
 
 	});
@@ -452,7 +486,7 @@ $(document).ready( function () {
 
 		if( $("#addDepartmentName").val() == "" ) {
 		
-			alert( "Please enter a valid department name");
+			$('#notEmptyDepartmentAlert1').html("<div class='alert alert-danger' role='alert'>Please enter a valid department name.</div>");
 			
 			return false;
 
@@ -501,16 +535,32 @@ $(document).ready( function () {
 
 	var $currentDepartmentRow;
 
-	$("#editDepartment-submit-btn").click( function() {
+	$("#editDepartment-submit-btn").click(function() {
+
+		$("#editDepartmentModal").modal("hide");
+
+		$("#confirmEditDepartmentAlert").html("");
+
+		$("#confirmEditDepartmentModal").modal("show");
+
+	});
+
+	$("#cancelEditDepartment-submit-btn").click(function() {
+
+		$("#confirmEditDepartmentModal").modal("hide");
+
+	});
+
+	$("#confirmEditDepartment-submit-btn").click( function() {
 		
 		if( $("#editDepartmentName").val() == "" ) {
 			
-			alert( "Please enter a valid department name");
+			$("#notEmptyDepartmentAlert2").html("<div class='alert alert-danger' role='alert'>Please enter a valid department name.</div>");
 			
 			return false;
 
-		}
-		
+		} 
+
 		$.ajax({
 			url: "php/editDepartment.php",
 			type: 'POST',
@@ -523,8 +573,6 @@ $(document).ready( function () {
 			dataType: "json",
 			success: function(result) {
 				
-				$("#editDepartmentModal").modal("hide");
-				
 				$("#editDepartmentName").val("");
 				
 				$("#editDepartmentLocation").val(1);
@@ -532,14 +580,16 @@ $(document).ready( function () {
 				var editDepartment = result['data'];
 				
 				$currentDepartmentRow.find("td.department-name").html( editDepartment.departmentName ); 
-				
 				$currentDepartmentRow.find("td.location-name").html( editDepartment.locationName );
+
+				$("#confirmEditDepartmentAlert").html("<div class='alert alert-success' role='alert'>Department successfully edited.</div>");
 				
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log(jqXHR);
 			}
 		});
+
 
 	});
 	
@@ -554,6 +604,8 @@ $(document).ready( function () {
 		$(".editDepartment-btn").click(function() {
 			
 			$currentDepartmentRow = $(this).closest('tr');
+
+			$("#notEmptyDepartmentAlert2").html("");
 			
 			$("#editDepartmentModal").modal("show");
 	
@@ -569,10 +621,12 @@ $(document).ready( function () {
 			
 			$currentDepartmentRow = $(this).closest('tr');
 
-			let p = confirm( "Are you sure you would like to delete this department?" );
-			
-			if (p == true) {
-				
+			$('#confirmDeleteDepartmentAlert').html("");
+
+			$('#confirmDeleteDepartmentModal').modal("show");
+
+			$('#confirmDeleteDepartment-submit-btn').click(function() {
+
 				$.ajax({
 					url: "php/deleteDepartmentByID.php",
 					type: 'POST',
@@ -582,15 +636,16 @@ $(document).ready( function () {
 					dataType: "json",
 					success: function(result) {
 
-
 						if (result.status.name == "ok") {
 
 							$currentDepartmentRow.remove();
+
+							$('#confirmDeleteDepartmentAlert').html("<div class='alert alert-success' role='alert'>Department successfully deleted.</div>");
 							
 						} else if (result.status.name == "violation") {
 								
-							alert("Cannot delete...");
-							
+							$('#confirmDeleteDepartmentAlert').html("<div class='alert alert-danger' role='alert'>This department cannot be deleted.</div>");
+
 						}
 
 					},
@@ -599,8 +654,16 @@ $(document).ready( function () {
 					}
 
 				});
-				
-			}
+
+
+			});
+			
+			$('#cancelDeleteDepartment-submit-btn').click(function() {
+
+				$('#confirmDeleteDepartmentModal').modal("hide");
+
+			});
+
 			
 		});
 	
@@ -679,6 +742,8 @@ $(document).ready( function () {
 
 	$("#addLocation-btn").click(function() {
 
+		$("#notEmptyLocationAlert1").html("");
+
 		$("#addLocationModal").modal("show");
 
 	});
@@ -687,7 +752,7 @@ $(document).ready( function () {
 		
 		if( $("#addLocationName").val() == "" ) {
 		
-			alert( "Please enter a valid location name");
+			$("#notEmptyLocationAlert1").html("<div class='alert alert-danger' role='alert'>Please enter a valid location name.</div>");
 			
 			return false;
 
@@ -732,15 +797,32 @@ $(document).ready( function () {
 	var $currentLocationRow;
 	
 	$("#editLocation-submit-btn").click(function() {
+
+		$("#editLocationModal").modal("hide");
+
+		$("#confirmEditLocationAlert").html("");
+
+		$("#confirmEditLocationModal").modal("show");
+
+	});
+
+	$("#cancelEditLocation-submit-btn").click(function() {
+
+		$("#confirmEditLocationModal").modal("hide");
+
+	});
+
+
+	$("#confirmEditLocation-submit-btn").click(function() {
 		
 		if( $("#editLocationName").val() == "" ) {
 			
-			alert( "Please enter a valid location name");
+			$("#notEmptyLocationAlert2").html("<div class='alert alert-danger' role='alert'>Please enter a valid location name.</div>");
 			
 			return false;
 
-		}
-		
+		} 
+
 		$.ajax({
 			url: "php/editLocation.php",
 			type: 'POST',
@@ -751,8 +833,6 @@ $(document).ready( function () {
 			dataType: "json",
 			success: function(result) {
 				
-				$("#editLocationModal").modal("hide");
-				
 				$("#editLocationName").val("");
 
 				console.log(result);
@@ -762,13 +842,15 @@ $(document).ready( function () {
 				//update row's entry with new value
 				
 				$currentLocationRow.find("td.location-name").html( editLocation.name );
+
+				$("#confirmEditLocationAlert").html("<div class='alert alert-success' role='alert'>Location successfully edited.</div>");
 			
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log(jqXHR);
 			}
 		});
-		
+
 
 	});
 	
@@ -783,6 +865,8 @@ $(document).ready( function () {
 		$(".editLocation-btn").click(function() {
 
 			$currentLocationRow = $(this).closest('tr');
+
+			$("#notEmptyLocationAlert2").html("");
 			
 			$("#editLocationModal").modal("show");
 			
@@ -797,9 +881,11 @@ $(document).ready( function () {
 			
 			$currentLocationRow = $(this).closest('tr');
 
-			let p = confirm( "Are you sure you would like to delete this location?" );
+			$('#confirmDeleteLocationAlert').html("");
 
-			if (p == true) {
+			$('#confirmDeleteLocationModal').modal("show");	
+
+			$('#confirmDeleteLocation-submit-btn').click(function() {
 
 				$.ajax({
 					url: "php/deleteLocationByID.php",
@@ -816,12 +902,13 @@ $(document).ready( function () {
 
 							$currentLocationRow.remove();
 
+							$('#confirmDeleteLocationAlert').html("<div class='alert alert-success' role='alert'>Location successfully deleted.</div>");
+
 						} else if (result.status.name == "violation") {
 							
-							alert("Cannot delete...");
-							
-						}
+							$('#confirmDeleteLocationAlert').html("<div class='alert alert-danger' role='alert'>This location cannot be deleted.</div>");
 
+						}
 
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
@@ -829,34 +916,46 @@ $(document).ready( function () {
 					}
 
 				});
+			
+			});
+			
+			$('#cancelDeleteLocation-submit-btn').click(function() {
 
-			}
+				$('#confirmDeleteLocationModal').modal("hide");
+
+			});
+
 
 		});
 		
 	}
 
-	$('#option1, #option2, #option3').on('click', function () {
-		//e.stopPropagation();
+	/*Remember to do the whole thing again with editing personnel!!!*/
+
+	/*What is the problem with the thing not stopping with empty edit?*/
+
+	/*
+	$('#option1, #option2, #option3').click( function () {
 		
 		hideAllCards();
 		if (this.id == 'option1') {
-			$('#personnelCard').collapse('show');
+			$('#personnelCard').collapse("show");
 		} else if (this.id == 'option2') {
-			$('#departmentsCard').collapse('show');
+			$('#departmentsCard').collapse("show");
 		} else if (this.id == 'option3') {
-			$('#locationCard').collapse('show');
+			$('#locationCard').collapse("show");
 		}
 	});
 	
 	
 	function hideAllCards() {
-		$('#departmentsCard').collapse('hide');
-		$('#locationCard').collapse('hide');
-		$('#personnelCard').collapse('hide');	
+		$('#departmentsCard').hide();
+		$('#locationCard').hide();
+		$('#personnelCard').hide();	
 	}	
 	
 	hideAllCards();
+	*/
 
 });
 

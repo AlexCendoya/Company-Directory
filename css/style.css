@@ -1,9 +1,5 @@
-body{
+body {
 	height: 100vh;
-}
-
-.card{
-	max-height: 100vh;
 }
 
 /*navbar*/
@@ -15,7 +11,14 @@ body{
     z-index: 50;
 }
 
-/*tables*/
+/*cards and tables*/
+
+.card {
+    margin-top: 10%;
+    margin-right: 5%;
+    margin-left: 5%;
+    max-height: 100vh;
+}
 
 .card-body .table thead tr th {
     text-align: center;
@@ -27,6 +30,30 @@ td {
     vertical-align: middle;
 }
 
+@media screen and (max-width: 413px) {
+
+    .card-body {
+        font-size: 9px;
+    }
+
+    .table-striped {
+        font-size: 13px;
+    }
+}
+
+@media screen and (max-height: 735px) {
+
+    .card-body {
+        font-size: 9px;
+    }
+
+    .table-striped {
+        font-size: 13px;
+
+    }
+}
+
+/*Remember to use media query to resize navbar and titles!!!!*/
 
 /*preloader*/
 
