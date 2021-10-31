@@ -951,7 +951,7 @@ $(document).ready( function () {
 		}
 	});
 
-	
+	/*
 	function hideAllCards() {
 		$('#personnelCard').hide();
 		$('#departmentsCard').hide();
@@ -960,7 +960,7 @@ $(document).ready( function () {
 	}	
 	
 	hideAllCards();
-	
+	*/
 
 
 });
