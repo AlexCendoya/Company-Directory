@@ -930,32 +930,38 @@ $(document).ready( function () {
 		
 	}
 
-	/*Remember to do the whole thing again with editing personnel!!!*/
-
 	/*What is the problem with the thing not stopping with empty edit?*/
 
-	/*
+	
 	$('#option1, #option2, #option3').click( function () {
-		
-		hideAllCards();
+
+
 		if (this.id == 'option1') {
-			$('#personnelCard').collapse("show");
+			$('#personnelCard').show();
+			$('#departmentsCard').hide();
+			$('#locationCard').hide();
 		} else if (this.id == 'option2') {
-			$('#departmentsCard').collapse("show");
+			$('#departmentsCard').show();
+			$('#personnelCard').hide();
+			$('#locationCard').hide();
 		} else if (this.id == 'option3') {
-			$('#locationCard').collapse("show");
+			$('#locationCard').show();
+			$('#personnelCard').hide();
+			$('#departmentsCard').hide();
 		}
 	});
-	
+
 	
 	function hideAllCards() {
+		$('#personnelCard').hide();
 		$('#departmentsCard').hide();
 		$('#locationCard').hide();
-		$('#personnelCard').hide();	
+
 	}	
 	
 	hideAllCards();
-	*/
+	
+
 
 });
 
