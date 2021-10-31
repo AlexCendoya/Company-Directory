@@ -305,9 +305,24 @@ $(document).ready( function () {
 										
 			$('#employeeName').html( $currentPersonnelRow.find('.personnelFirstName').text() + " " + $currentPersonnelRow.find('.personnelLastName').text() );
 			$('#employeeEmail').html( $currentPersonnelRow.find('.personnelEmail').text() );
+
+			//Check this
+
+			if($currentPersonnelRow.find('.personnelJobTitle').text() == "") {
+
+				$('#employeeJobTitle').html("<i>Please introduce a position</i>");
+
+			} else {
+
+				$('#employeeJobTitle').html( $currentPersonnelRow.find('.personnelJobTitle').text() );
+
+			}
+
 			$('#employeeJobTitle').html( $currentPersonnelRow.find('.personnelJobTitle').text() );
 			$('#employeeDepartment').html( $currentPersonnelRow.find('.personnelDepartment').text() );
 			$('#employeeLocation').html( $currentPersonnelRow.find('.personnelLocation').text() );
+
+
 
 			$("#employeeModal").modal("show");
 
@@ -956,11 +971,11 @@ $(document).ready( function () {
 		$('#personnelCard').hide();
 		$('#departmentsCard').hide();
 		$('#locationCard').hide();
-
 	}	
 	
 	hideAllCards();
 	*/
+	
 
 
 });
