@@ -13,6 +13,7 @@
 
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="css/datatables.min.css"/>
+        <link rel="stylesheet" type="text/css" href="css/fixedHeader.dataTables.min.css"/>        
         <link rel="stylesheet" type="text/css" href="css/responsive.bootstrap.min.css"/>
  
         <link rel="stylesheet" href="css/all.css">
@@ -67,17 +68,10 @@
             <div id="personnelCard" class="card">
 
                 <div class="card-header bg-dark text-white">
-                    <table>
-                        <tr class="card-title">
-                            <td>
-                                <h4 class="table-title">Personnel</h4>
-                            </td>
-                            
-                            <td>
-                                <button type="button" id="addEmployee-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button>
-                            </td>
-                        </tr>
-                    </table>
+                    
+                    <h3 class="table-title">Personnel<button type="button" id="addEmployee-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button></h3>
+                                
+                        
                 </div>
 
                 <div class="card-body">						
@@ -95,11 +89,11 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <th class="clear-filter text-center"></th>
+                                <th class="clear-filter text-center"></th>
+                                <th class="clear-filter text-center"></th>
+                                <th class="clear-filter text-center"></th>
+                                <th class="clear-filter text-center"></th>
                             </tr>
                         </tfoot>
                     </table>
@@ -111,18 +105,8 @@
 
                 <div class="card-header bg-dark text-white">
 
-                    <table>
-                        <tr class="card-title">
-                            <td class="table-title">
-                                <h4>Departments</h4>
-                            </td>
-                            
-                            <td>
-                                <button type="button" id="addDepartment-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button>
-                            </td>
-                        </tr>
-                    </table>
-
+                    <h3 class="table-title">Departments<button type="button" id="addDepartment-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button></h3>
+                
                 </div>
 
                 <div class="card-body">
@@ -131,6 +115,7 @@
                             <tr>
                                 <th data-priority="1">Department</th>
                                 <th>Location</th>
+                                <th>Personnel</th>
                                 <th data-priority="2">Options</th>
                             </tr>
 
@@ -139,9 +124,10 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <th class="clear-filter text-center"></th>
+                                <th class="clear-filter text-center"></th>
+                                <th class="clear-filter text-center"></th>
+                                <th class="clear-filter text-center"></th>
                             </tr>
                             
                         </tfoot>
@@ -153,18 +139,7 @@
 
                 <div class="card-header bg-dark text-white">
                     
-                    <table>
-                        <tr class="card-title">
-                            <td class="table-title">
-                                <h4>Location</h4>  
-                            </td>
-                            
-                            <td>
-                                <button type="button" id="addLocation-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button>
-                            </td>
-                        </tr>
-                    </table>
-
+                    <h3 class="table-title">Location<button type="button" id="addLocation-btn" class="btn btn-primary" title="add"><i class="fas fa-plus"></i></button></h3>  
 
                 </div>
 
@@ -172,8 +147,9 @@
                     <table id="locationTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th>Location</th>
-                                <th>Options</th>
+                                <th data-priority="1">Location</th>
+                                <th>Departments</th>
+                                <th data-priority="2">Options</th>
                             </tr>
 
                         </thead>
@@ -221,7 +197,7 @@
                             <table>
                                 <tr>
                                     <td>
-                                        Email:
+                                        <b>Email:</b>
                                     </td>
 
                                     <td id="employeeEmail">
@@ -231,7 +207,7 @@
 
                                 <tr>
                                     <td>
-                                        Job title:
+                                        <b>Job title:</b>
                                     </td>
 
                                     <td id="employeeJobTitle">
@@ -241,7 +217,7 @@
 
                                 <tr>
                                     <td>
-                                        Department:
+                                        <b>Department:</b>
                                     </td>
 
                                     <td id="employeeDepartment">
@@ -252,7 +228,7 @@
 
                                 <tr>
                                     <td>
-                                        Location:
+                                        <b>Location:</b>
                                     </td>
 
                                     <td id="employeeLocation">
@@ -282,7 +258,7 @@
 
                         <div class="modal-header">
 
-                            <h5 class="modal-title">Add new employee</h5>
+                            <h5 class="modal-title"><i class="fas fa-users"></i> Add new employee</h5>
 
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
@@ -356,7 +332,7 @@
 
                         <div class="modal-header">
 
-                            <h5 class="modal-title">Edit employee information</h5>
+                            <h5 class="modal-title"><i class="fas fa-users"></i> Edit employee information</h5>
 
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
@@ -428,7 +404,7 @@
                     <div class="modal-content">
                         
                         <div class="modal-header">
-                            <h5 class="modal-title">Edit Personnel</h5>
+                            <h5 class="modal-title"><i class="fas fa-users"></i> Edit Personnel</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -457,7 +433,7 @@
                     <div class="modal-content">
                         
                         <div class="modal-header">
-                            <h5 class="modal-title">Delete Personnel</h5>
+                            <h5 class="modal-title"><i class="fas fa-users"></i> Delete Personnel</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -496,7 +472,7 @@
 
                         <div class="modal-header">
 
-                            <h5 class="modal-title">Add new department</h5>
+                            <h5 class="modal-title"><i class="fas fa-building"></i> Add new department</h5>
 
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
@@ -545,7 +521,7 @@
 
                         <div class="modal-header">
 
-                            <h5 class="modal-title">Edit department</h5>
+                            <h5 class="modal-title"><i class="fas fa-building"></i> Edit department</h5>
 
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
@@ -595,7 +571,7 @@
                     <div class="modal-content">
                         
                         <div class="modal-header">
-                            <h5 class="modal-title">Edit Department</h5>
+                            <h5 class="modal-title"><i class="fas fa-building"></i> Edit Department</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -624,7 +600,7 @@
                     <div class="modal-content">
                         
                         <div class="modal-header">
-                            <h5 class="modal-title">Delete Department</h5>
+                            <h5 class="modal-title"><i class="fas fa-building"></i> Delete Department</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -663,7 +639,7 @@
 
                         <div class="modal-header">
 
-                            <h5 class="modal-title">Add new location</h5>
+                            <h5 class="modal-title"><i class="fas fa-map-marker-alt"></i> Add new location</h5>
 
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
@@ -709,7 +685,7 @@
 
                         <div class="modal-header">
 
-                            <h5 class="modal-title">Edit location</h5>
+                            <h5 class="modal-title"><i class="fas fa-map-marker-alt"></i> Edit location</h5>
 
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
@@ -752,7 +728,7 @@
                     <div class="modal-content">
 
                         <div class="modal-header">
-                            <h5 class="modal-title">Edit Location</h5>
+                            <h5 class="modal-title"><i class="fas fa-map-marker-alt"></i> Edit Location</h5>
 
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
@@ -786,7 +762,7 @@
                     <div class="modal-content">
 
                         <div class="modal-header">
-                            <h5 class="modal-title">Delete Location</h5>
+                            <h5 class="modal-title"><i class="fas fa-map-marker-alt"></i> Delete Location</h5>
 
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
@@ -815,6 +791,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>	
         <script src="js/bootstrap.min.js"></script>
         <script type="text/javascript" src="js/datatables.min.js"></script>
+        <script type="text/javascript" src="js/fixedHeader.dataTables.min.js"></script>     
         <script type="text/javascript" src="js/dataTables.responsive.min.js"></script>
         <script src="js/all.js"></script>
         <script src="js/script.js"></script>

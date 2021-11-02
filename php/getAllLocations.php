@@ -61,6 +61,26 @@
 
 	}
 
+	
+
+	$query = 'SELECT locationID, COUNT(*) as departmentsNumber FROM department GROUP BY locationID';
+
+	$result = $conn->query($query);
+
+	while ($row = mysqli_fetch_assoc($result)) {
+
+		foreach($data as &$location) {
+
+			if ($location["id"] == $row["locationID"]) {
+
+				$location["departmentsNumber"] = $row["departmentsNumber"];
+
+			}
+		}
+	}
+
+
+
 	$output['status']['code'] = "200";
 	$output['status']['name'] = "ok";
 	$output['status']['description'] = "success";

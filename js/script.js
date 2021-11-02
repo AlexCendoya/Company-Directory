@@ -50,6 +50,7 @@ $(document).ready( function () {
 						
 							$("#personnelTable").DataTable({
 								responsive: true,
+								//fixedHeader: true,
 								scrollY: 400,
 								initComplete: function () {
 									this.api().columns().every( function () {
@@ -96,6 +97,8 @@ $(document).ready( function () {
 
 	$("#addEmployee-btn").click(function() {
 
+		//$("#addEmployee-submit-btn").attr( "disabled", false );
+
 		$("#notEmptyPersonnelAlert1").html("");
 
 		$("#addPersonnelModal").modal("show");
@@ -110,8 +113,6 @@ $(document).ready( function () {
 			$('#notEmptyPersonnelAlert1').html("<div class='alert alert-danger' role='alert'>Please enter all the required fields.</div>");
 			
 			return false;
-
-			// not sure if job title is important so for the moment I get rid of this ($("#addEmployeeJobTitle").val() == "" )||
 
 		}
 		
@@ -142,7 +143,6 @@ $(document).ready( function () {
 				email: $("#addEmployeeEmail").val(),
 				departmentID: $("#addEmployeeDepartment").val(),
 				departmentName: $departmentName,
-				//locationID: $("#addEmployeeLocation").val(),
 				locationName: $locationName,
 
 			},
@@ -179,6 +179,8 @@ $(document).ready( function () {
 
 				registerEditDeleteEmployeeButtons();
 
+				//$("#addEmployee-submit-btn").attr( "disabled", true );
+
 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -196,7 +198,16 @@ $(document).ready( function () {
 
 	$("#editPersonnel-submit-btn").click(function() {
 
+		if (($("#editEmployeeFirstName").val() == "" ) || ($("#editEmployeeLastName").val() == "" ) || ($("#editEmployeeEmail").val() == "" )) {
+
+			$('#notEmptyPersonnelAlert2').html("<div class='alert alert-danger' role='alert'>Please enter all the required fields.</div>");
+			
+			return false;
+		}
+
 		$("#editPersonnelModal").modal("hide");
+
+		$("#confirmEditPersonnel-submit-btn").attr( "disabled", false );
 
 		$("#confirmEditPersonnelAlert").html("");
 
@@ -212,16 +223,6 @@ $(document).ready( function () {
 	});
 
 	$("#confirmEditPersonnel-submit-btn").click(function() {
-
-		if (($("#editEmployeeFirstName").val() == "" ) || ($("#editEmployeeLastName").val() == "" ) || ($("#editEmployeeEmail").val() == "" )) {
-
-			$('#notEmptyPersonnelAlert2').html("<div class='alert alert-danger' role='alert'>Please enter all the required fields.</div>");
-			
-			return false;
-
-			// not sure if job title is important so for the moment I get rid of this ($("#editEmployeeJobTitle").val() == "" )||
-			//add *!
-		}
 		
 		var getDepartmentName = $("#editEmployeeDepartment option:selected").text()
 		
@@ -249,10 +250,9 @@ $(document).ready( function () {
 				email: $("#editEmployeeEmail").val(),
 				departmentID: $("#editEmployeeDepartment").val(),
 				departmentName: $departmentName,
-				//locationID: $("#editEmployeeLocation").val(),
 				locationName: $locationName,
 				id: $currentPersonnelRow.data("id"),
-				//double-check if all of these are necessary or should be changed
+
 			},
 			dataType: "json",
 			success: function(result) {
@@ -276,6 +276,7 @@ $(document).ready( function () {
 
 				$("#confirmEditPersonnelAlert").html("<div class='alert alert-success' role='alert'>Employee successfully edited.</div>");
 
+				$("#confirmEditPersonnel-submit-btn").attr( "disabled", true );
 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -303,10 +304,8 @@ $(document).ready( function () {
 			
 			$currentPersonnelRow = $(this).closest('tr');
 										
-			$('#employeeName').html( $currentPersonnelRow.find('.personnelFirstName').text() + " " + $currentPersonnelRow.find('.personnelLastName').text() );
+			$('#employeeName').html("<i class='fas fa-users'></i> " + $currentPersonnelRow.find('.personnelFirstName').text() + " " + $currentPersonnelRow.find('.personnelLastName').text() );
 			$('#employeeEmail').html( $currentPersonnelRow.find('.personnelEmail').text() );
-
-			//Check this
 
 			if($currentPersonnelRow.find('.personnelJobTitle').text() == "") {
 
@@ -318,11 +317,8 @@ $(document).ready( function () {
 
 			}
 
-			$('#employeeJobTitle').html( $currentPersonnelRow.find('.personnelJobTitle').text() );
 			$('#employeeDepartment').html( $currentPersonnelRow.find('.personnelDepartment').text() );
 			$('#employeeLocation').html( $currentPersonnelRow.find('.personnelLocation').text() );
-
-
 
 			$("#employeeModal").modal("show");
 
@@ -354,6 +350,8 @@ $(document).ready( function () {
 
 			$currentPersonnelRow = $(this).closest('tr');
 
+			$("#confirmDeletePersonnel-submit-btn").attr( "disabled", false );
+
 			$('#confirmDeletePersonnelAlert').html("");
 
 			$('#confirmDeletePersonnelModal').modal("show");
@@ -377,6 +375,7 @@ $(document).ready( function () {
 
 							$('#confirmDeletePersonnelAlert').html("<div class='alert alert-success' role='alert'>Employee successfully deleted.</div>");
 
+							$("#confirmDeletePersonnel-submit-btn").attr( "disabled", true );
 						}
 	
 					},
@@ -400,7 +399,6 @@ $(document).ready( function () {
 
 	}
 
-
 					
 	
 	
@@ -417,7 +415,7 @@ $(document).ready( function () {
 		dataType: "json",
 		success: function(result) {
 
-			//console.log(result);
+			console.log(result);
 
 			if (result.status.name == "ok") {
 
@@ -430,6 +428,7 @@ $(document).ready( function () {
 						let $tr = $('<tr data-id="' + department.id + '">').append(
 							$('<td class="department-name">').text(department.name),
 							$('<td class="location-name">').text(department.location),
+							$('<td>').text(department.totalPersonnel),
 							$('<td>').html(
 								'<button class="editDepartment-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
 								'<button class="deleteDepartment-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
@@ -445,13 +444,14 @@ $(document).ready( function () {
 						
 						$("#departmentsTable").DataTable({
 							responsive: true,
+							//fixedHeader: true,
 							scrollY: 400,
 							initComplete: function () {
 								this.api().columns().every( function () {
 									var column = this;
 
 									var some = column.index();
-									if (column.index() == 2) return;
+									if (column.index() == 3) return;
 
 									var select = $('<select><option value=""></option></select>')
 										.appendTo( $(column.footer()).empty() )
@@ -514,7 +514,6 @@ $(document).ready( function () {
 				name: $("#addDepartmentName").val(),
 				locationID: $("#addDepartmentLocation").val(),
 				locationName: $("#addDepartmentLocation option:selected").text(),
-				//Is this last one necessary?
 			},
 			dataType: "json",
 			success: function(result) {
@@ -552,7 +551,17 @@ $(document).ready( function () {
 
 	$("#editDepartment-submit-btn").click(function() {
 
+		if( $("#editDepartmentName").val() == "" ) {
+			
+			$("#notEmptyDepartmentAlert2").html("<div class='alert alert-danger' role='alert'>Please enter a valid department name.</div>");
+			
+			return false;
+
+		} 
+
 		$("#editDepartmentModal").modal("hide");
+
+		$("#confirmEditDepartment-submit-btn").attr( "disabled", false );
 
 		$("#confirmEditDepartmentAlert").html("");
 
@@ -566,15 +575,8 @@ $(document).ready( function () {
 
 	});
 
-	$("#confirmEditDepartment-submit-btn").click( function() {
+	$("#confirmEditDepartment-submit-btn").click(function() {
 		
-		if( $("#editDepartmentName").val() == "" ) {
-			
-			$("#notEmptyDepartmentAlert2").html("<div class='alert alert-danger' role='alert'>Please enter a valid department name.</div>");
-			
-			return false;
-
-		} 
 
 		$.ajax({
 			url: "php/editDepartment.php",
@@ -599,6 +601,7 @@ $(document).ready( function () {
 
 				$("#confirmEditDepartmentAlert").html("<div class='alert alert-success' role='alert'>Department successfully edited.</div>");
 				
+				$("#confirmEditDepartment-submit-btn").attr( "disabled", true );
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log(jqXHR);
@@ -636,6 +639,8 @@ $(document).ready( function () {
 			
 			$currentDepartmentRow = $(this).closest('tr');
 
+			$("#confirmDeleteDepartment-submit-btn").attr("disabled", false);
+
 			$('#confirmDeleteDepartmentAlert').html("");
 
 			$('#confirmDeleteDepartmentModal').modal("show");
@@ -656,10 +661,14 @@ $(document).ready( function () {
 							$currentDepartmentRow.remove();
 
 							$('#confirmDeleteDepartmentAlert').html("<div class='alert alert-success' role='alert'>Department successfully deleted.</div>");
+
+							$("#confirmDeleteDepartment-submit-btn").attr("disabled", true);
 							
 						} else if (result.status.name == "violation") {
 								
 							$('#confirmDeleteDepartmentAlert').html("<div class='alert alert-danger' role='alert'>This department cannot be deleted.</div>");
+
+							$("#confirmDeleteDepartment-submit-btn").attr("disabled", true);
 
 						}
 
@@ -698,7 +707,7 @@ $(document).ready( function () {
 		dataType: "json",
 		success: function(result) {
 
-			//console.log(result);
+			console.log(result);
 
 			if (result.status.name == "ok") {
 
@@ -710,6 +719,7 @@ $(document).ready( function () {
 												
 						let $tr = $('<tr data-id="' + location.id + '">').append(
 							$('<td class="location-name">').text(location.name),
+							$('<td>').text(location.departmentsNumber),
 							$('<td>').html(
 								'<button class="editLocation-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
 								'<button class="deleteLocation-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
@@ -734,6 +744,7 @@ $(document).ready( function () {
 						
 							$("#locationTable").DataTable({
 								responsive: true,
+								//fixedHeader: true,
 								scrollY: 400
 							}); 
 
@@ -813,7 +824,17 @@ $(document).ready( function () {
 	
 	$("#editLocation-submit-btn").click(function() {
 
+		if( $("#editLocationName").val() == "" ) {
+			
+			$("#notEmptyLocationAlert2").html("<div class='alert alert-danger' role='alert'>Please enter a valid location name.</div>");
+			
+			return false;
+
+		} 
+
 		$("#editLocationModal").modal("hide");
+
+		$("#confirmEditLocation-submit-btn").attr( "disabled", false );
 
 		$("#confirmEditLocationAlert").html("");
 
@@ -830,13 +851,7 @@ $(document).ready( function () {
 
 	$("#confirmEditLocation-submit-btn").click(function() {
 		
-		if( $("#editLocationName").val() == "" ) {
-			
-			$("#notEmptyLocationAlert2").html("<div class='alert alert-danger' role='alert'>Please enter a valid location name.</div>");
-			
-			return false;
 
-		} 
 
 		$.ajax({
 			url: "php/editLocation.php",
@@ -859,6 +874,8 @@ $(document).ready( function () {
 				$currentLocationRow.find("td.location-name").html( editLocation.name );
 
 				$("#confirmEditLocationAlert").html("<div class='alert alert-success' role='alert'>Location successfully edited.</div>");
+
+				$("#confirmEditLocation-submit-btn").attr( "disabled", true );
 			
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -896,6 +913,8 @@ $(document).ready( function () {
 			
 			$currentLocationRow = $(this).closest('tr');
 
+			$("#confirmDeleteLocation-submit-btn").attr( "disabled", false );
+
 			$('#confirmDeleteLocationAlert').html("");
 
 			$('#confirmDeleteLocationModal').modal("show");	
@@ -919,10 +938,13 @@ $(document).ready( function () {
 
 							$('#confirmDeleteLocationAlert').html("<div class='alert alert-success' role='alert'>Location successfully deleted.</div>");
 
+							$("#confirmDeleteLocation-submit-btn").attr( "disabled", true );
+
 						} else if (result.status.name == "violation") {
 							
 							$('#confirmDeleteLocationAlert').html("<div class='alert alert-danger' role='alert'>This location cannot be deleted.</div>");
 
+							$("#confirmDeleteLocation-submit-btn").attr( "disabled", true );
 						}
 
 					},
@@ -945,8 +967,6 @@ $(document).ready( function () {
 		
 	}
 
-	/*What is the problem with the thing not stopping with empty edit?*/
-
 	
 	$('#option1, #option2, #option3').click( function () {
 
@@ -966,7 +986,7 @@ $(document).ready( function () {
 		}
 	});
 
-	/*
+	/*	
 	function hideAllCards() {
 		$('#personnelCard').hide();
 		$('#departmentsCard').hide();
@@ -974,8 +994,8 @@ $(document).ready( function () {
 	}	
 	
 	hideAllCards();
-	*/
-	
+
+	*/	
 
 
 });

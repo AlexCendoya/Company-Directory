@@ -80,6 +80,31 @@
 
 	}
 
+
+	$query = 'SELECT departmentID, COUNT(*) as totalPersonnel FROM personnel GROUP BY departmentID';
+
+	$result = $conn->query($query);
+
+	//$dataPersonnel = [];
+
+	while ($row = mysqli_fetch_assoc($result)) {
+
+		foreach($data as &$department) {
+		
+			
+			if ($department["id"] == $row["departmentID"]) {
+				
+				//got the value of the count for each department stored in $row["totalPersonnel"]
+				//replace the original array's content with the original data PLUS the additional data
+
+				$department["totalPersonnel"] = $row["totalPersonnel"];
+
+			}
+
+		}
+
+	}
+
 	$output['status']['code'] = "200";
 	$output['status']['name'] = "ok";
 	$output['status']['description'] = "success";

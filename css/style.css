@@ -20,18 +20,30 @@ body {
     max-height: 100vh;
 }
 
+.table-title {
+
+    vertical-align: middle;
+}
+
+.table-title .btn {
+    float: right !important;
+}
+
 .card-body .table thead tr th {
     text-align: center;
 } 
 
-
 td {
     display: table-cell;
     vertical-align: middle;
+    text-align: center;
+}
+
+.modal-dialog .modal-content .modal-body table tr td {
+    text-align: left;
 }
 
 @media screen and (min-width: 319px) and (max-width: 410px) {
-
 
     .card-body {
         font-size: 10px;
