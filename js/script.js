@@ -19,7 +19,7 @@ $(document).ready( function () {
 
 				var all = result['data'];
 				
-				console.log(all);
+				//console.log(all);
 				
 				$(function() {
 					
@@ -30,7 +30,7 @@ $(document).ready( function () {
 							$('<td class="personnelDepartment" data-department-id="' + personnel.departmentID + '">').text(personnel.department),
 							$('<td class="personnelLocation">').text(personnel.location),
 							
-							$('<td>').html(
+							$('<td class="personnelOptions">').html(
 								'<button class="info-btn btn text-primary" title="view"><i class="fas fa-info"></i></button>' + 
 								'<button class="editEmployee-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
 								'<button class="deletePersonnel-btn btn text-danger" title="delete""><i class="fas fa-trash-alt"></i></button>'
@@ -51,7 +51,7 @@ $(document).ready( function () {
 							$("#personnelTable").DataTable({
 								responsive: true,
 								//fixedHeader: true,
-								scrollY: 400,
+								scrollY: 300,
 								initComplete: function () {
 									this.api().columns().every( function () {
 										var column = this;
@@ -73,12 +73,12 @@ $(document).ready( function () {
 
 										column.data().unique().sort().each( function ( d, j ) {
 											select.append( '<option value="'+d+'">'+d+'</option>' )
-										} );
-									} );
+										});
+									});
 								}
 
+							}).columns.adjust().responsive.recalc(); 
 
-							});
 							
 						});
 						
@@ -161,7 +161,7 @@ $(document).ready( function () {
 					$('<td class="personnelFirstName">').text(newEmployee.firstName),
 					$('<td class="personnelDepartment" data-department-id="' + $("#addEmployeeDepartment").val() + '">').text(newEmployee.departmentName),
 					$('<td class="personnelLocation">').text(newEmployee.locationName),
-					$('<td>').html(
+					$('<td class="personnelOptions">').html(
 						'<button class="info-btn btn text-primary" title="view"><i class="fas fa-info"></i></button>' + 
 						'<button class="editEmployee-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
 						'<button class="deletePersonnel-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
@@ -276,7 +276,7 @@ $(document).ready( function () {
 
 				$("#confirmEditPersonnelAlert").html("<div class='alert alert-success' role='alert'>Employee successfully edited.</div>");
 
-				$("#confirmEditPersonnel-submit-btn").attr( "disabled", true );
+				$("#confirmEditPersonnel-submit-btn").attr("disabled", true);
 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -348,7 +348,15 @@ $(document).ready( function () {
 
 		$(".deletePersonnel-btn").click(function() {
 
+			$("#confirmDeletePersonnel-submit-btn").unbind("click");
+
+			$('#personnelVictim').html("");
+
 			$currentPersonnelRow = $(this).closest('tr');
+
+			$('#personnelVictim').html($currentPersonnelRow.find('.personnelFirstName').text() + " " +  
+			$currentPersonnelRow.find('.personnelLastName').text() + " (" + 
+			$currentPersonnelRow.find('.personnelDepartment').text() + ")");
 
 			$("#confirmDeletePersonnel-submit-btn").attr( "disabled", false );
 
@@ -367,7 +375,7 @@ $(document).ready( function () {
 					dataType: "json",
 					success: function(result) {
 	
-						//console.log(result);
+						console.log(result);
 	
 						if (result.status.name == "ok") {
 							
@@ -429,7 +437,7 @@ $(document).ready( function () {
 							$('<td class="department-name">').text(department.name),
 							$('<td class="location-name">').text(department.location),
 							$('<td>').text(department.totalPersonnel),
-							$('<td>').html(
+							$('<td class="departmentOptions">').html(
 								'<button class="editDepartment-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
 								'<button class="deleteDepartment-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
 							)
@@ -445,7 +453,7 @@ $(document).ready( function () {
 						$("#departmentsTable").DataTable({
 							responsive: true,
 							//fixedHeader: true,
-							scrollY: 400,
+							scrollY: 300,
 							initComplete: function () {
 								this.api().columns().every( function () {
 									var column = this;
@@ -470,7 +478,8 @@ $(document).ready( function () {
 									} );
 								} );
 							}
-						}); 
+						}).columns.adjust().responsive.recalc(); 
+
 						
 					});
 
@@ -525,10 +534,13 @@ $(document).ready( function () {
 
 				var newDepartment = result['data'];
 
+				//insert the number of employees!!
+
 				let $tr = $('<tr data-id="' + newDepartment.id + '">').append(
 					$('<td class="department-name">').text(newDepartment.departmentName),
-					$('<td class="location-name">').text(newDepartment.locationName), 
-					$('<td>').html(
+					$('<td class="location-name">').text(newDepartment.locationName),
+					$('<td>').text(newDepartment.totalPersonnel),					 
+					$('<td class="departmentOptions">').html(
 						'<button class="editDepartment-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
 						'<button class="deleteDepartment-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
 					)
@@ -636,8 +648,14 @@ $(document).ready( function () {
 		//Delete department button
 			
 		$(".deleteDepartment-btn").click(function() {
+
+			$("#confirmDeleteDepartment-submit-btn").unbind("click");
+
+			$('#departmentVictim').html("");
 			
 			$currentDepartmentRow = $(this).closest('tr');
+
+			$('#departmentVictim').html($currentDepartmentRow.find('.department-name').text());
 
 			$("#confirmDeleteDepartment-submit-btn").attr("disabled", false);
 
@@ -655,6 +673,8 @@ $(document).ready( function () {
 					},
 					dataType: "json",
 					success: function(result) {
+
+						console.log(result);
 
 						if (result.status.name == "ok") {
 
@@ -720,7 +740,7 @@ $(document).ready( function () {
 						let $tr = $('<tr data-id="' + location.id + '">').append(
 							$('<td class="location-name">').text(location.name),
 							$('<td>').text(location.departmentsNumber),
-							$('<td>').html(
+							$('<td class="locationOptions">').html(
 								'<button class="editLocation-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
 								'<button class="deleteLocation-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
 							)
@@ -745,8 +765,9 @@ $(document).ready( function () {
 							$("#locationTable").DataTable({
 								responsive: true,
 								//fixedHeader: true,
-								scrollY: 400
-							}); 
+								scrollY: 300
+							}).columns.adjust().responsive.recalc(); 
+
 
 						});
 
@@ -804,7 +825,8 @@ $(document).ready( function () {
 				let $tr = $('<tr data-id="' + newLocation.id + '">').append(
 
 					$('<td class="location-name">').text(newLocation.name),
-					$('<td>').html(
+					$('<td>').text(newLocation.departmentsNumber),
+					$('<td class="locationOptions">').html(
 						'<button class="editLocation-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
 						'<button class="deleteLocation-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
 					)
@@ -834,7 +856,7 @@ $(document).ready( function () {
 
 		$("#editLocationModal").modal("hide");
 
-		$("#confirmEditLocation-submit-btn").attr( "disabled", false );
+		$("#confirmEditLocation-submit-btn").attr("disabled", false);
 
 		$("#confirmEditLocationAlert").html("");
 
@@ -875,7 +897,7 @@ $(document).ready( function () {
 
 				$("#confirmEditLocationAlert").html("<div class='alert alert-success' role='alert'>Location successfully edited.</div>");
 
-				$("#confirmEditLocation-submit-btn").attr( "disabled", true );
+				$("#confirmEditLocation-submit-btn").attr("disabled", true);
 			
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -909,11 +931,18 @@ $(document).ready( function () {
 
 		//Delete button
 
+
 		$(".deleteLocation-btn").click(function() {
-			
+
+			$("#confirmDeleteLocation-submit-btn").unbind("click");
+
+			$('#locationVictim').html("");
+
 			$currentLocationRow = $(this).closest('tr');
 
-			$("#confirmDeleteLocation-submit-btn").attr( "disabled", false );
+			$('#locationVictim').html($currentLocationRow.find('.location-name').text());
+			
+			$("#confirmDeleteLocation-submit-btn").attr( "disabled", false);
 
 			$('#confirmDeleteLocationAlert').html("");
 
@@ -968,8 +997,7 @@ $(document).ready( function () {
 	}
 
 	
-	$('#option1, #option2, #option3').click( function () {
-
+	$('#option1, #option2, #option3').click(function () {
 
 		if (this.id == 'option1') {
 			$('#personnelCard').show();
@@ -986,7 +1014,7 @@ $(document).ready( function () {
 		}
 	});
 
-	/*	
+	/*
 	function hideAllCards() {
 		$('#personnelCard').hide();
 		$('#departmentsCard').hide();
@@ -995,7 +1023,9 @@ $(document).ready( function () {
 	
 	hideAllCards();
 
-	*/	
+
+
+	*/
 
 
 });
