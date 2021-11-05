@@ -62,8 +62,8 @@ td {
 
 @media screen and (max-width: 360px) {
     .card {
-        margin-top: 20%;
-        padding-bottom: 30px !important;
+        margin-top: 20%;   
+        padding-bottom: 20px !important;
     }
 
     .navbar-brand {
@@ -80,18 +80,10 @@ td {
         font-size: 10px;
     }
 
+
     .table-striped {
         font-size: 11px;
     }
-
-    /*
-
-    #departmentsCard .card-body .table-responsive tr .table-striped {
-        font-size:
-
-    }
-
-    */
 
     .table-striped tr td {
         padding: 0;
@@ -150,6 +142,9 @@ td {
         padding: 0;
     }
 
+    .dataTables_filter, .dataTables_info, .dataTables_length { 
+        display: none; 
+    }
 
     .pagination .paginate_button:not(.previous):not(.next){
         display: none;

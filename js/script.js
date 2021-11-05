@@ -50,8 +50,8 @@ $(document).ready( function () {
 						
 							$("#personnelTable").DataTable({
 								responsive: true,
-								//fixedHeader: true,
-								scrollY: 300,
+								fixedHeader: true,
+								scrollY: "35vh",
 								initComplete: function () {
 									this.api().columns().every( function () {
 										var column = this;
@@ -452,8 +452,8 @@ $(document).ready( function () {
 						
 						$("#departmentsTable").DataTable({
 							responsive: true,
-							//fixedHeader: true,
-							scrollY: 300,
+							fixedHeader: true,
+							scrollY: "35vh",
 							initComplete: function () {
 								this.api().columns().every( function () {
 									var column = this;
@@ -754,7 +754,7 @@ $(document).ready( function () {
 						$('#addDepartmentLocation').append(`<option value="${location.id}">${location.name}</option>`);						
 						$('#editDepartmentLocation').append(`<option value="${location.id}">${location.name}</option>`);
 
-					})).then( function() {
+					})).then(function() {
 
 						$.when(
 
@@ -764,10 +764,9 @@ $(document).ready( function () {
 						
 							$("#locationTable").DataTable({
 								responsive: true,
-								//fixedHeader: true,
-								scrollY: 300
+								fixedHeader: true,
+								scrollY: "30vh"
 							}).columns.adjust().responsive.recalc(); 
-
 
 						});
 
