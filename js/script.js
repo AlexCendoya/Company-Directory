@@ -872,8 +872,6 @@ $(document).ready( function () {
 
 	$("#confirmEditLocation-submit-btn").click(function() {
 		
-
-
 		$.ajax({
 			url: "php/editLocation.php",
 			type: 'POST',
