@@ -534,7 +534,9 @@ $(document).ready( function () {
 
 				var newDepartment = result['data'];
 
-				//insert the number of employees!!
+				if (!newDepartment.hasOwnProperty('totalPersonnel')) {
+					newDepartment.totalPersonnel = "0";
+				}
 
 				let $tr = $('<tr data-id="' + newDepartment.id + '">').append(
 					$('<td class="department-name">').text(newDepartment.departmentName),
@@ -820,6 +822,10 @@ $(document).ready( function () {
 				console.log(result);
 
 				var newLocation = result['data'];
+
+				if (!newLocation.hasOwnProperty('departmentsNumber')) {
+					newLocation.departmentsNumber = "0";
+				}
 
 				let $tr = $('<tr data-id="' + newLocation.id + '">').append(
 
