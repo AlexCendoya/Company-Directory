@@ -423,7 +423,7 @@ $(document).ready( function () {
 		dataType: "json",
 		success: function(result) {
 
-			console.log(result);
+			//console.log(result);
 
 			if (result.status.name == "ok") {
 
@@ -432,6 +432,10 @@ $(document).ready( function () {
 				$(function() {
 					
 					$.when($.each(departments, function(i, department) {
+
+						if (!department.totalPersonnel) {
+							department.totalPersonnel = 0;
+						}
 
 						let $tr = $('<tr data-id="' + department.id + '">').append(
 							$('<td class="department-name">').text(department.name),
@@ -530,12 +534,12 @@ $(document).ready( function () {
 				$("#addDepartmentModal").modal("hide");
 				$("#addDepartmentName").val("");
 
-				console.log(result);
+				//console.log(result);
 
 				var newDepartment = result['data'];
 
-				if (!newDepartment.hasOwnProperty('totalPersonnel')) {
-					newDepartment.totalPersonnel = "0";
+				if (!newDepartment.totalPersonnel) {
+					newDepartment.totalPersonnel = 0;
 				}
 
 				let $tr = $('<tr data-id="' + newDepartment.id + '">').append(
@@ -729,7 +733,7 @@ $(document).ready( function () {
 		dataType: "json",
 		success: function(result) {
 
-			console.log(result);
+			//console.log(result);
 
 			if (result.status.name == "ok") {
 
@@ -738,6 +742,10 @@ $(document).ready( function () {
 				$(function() {
 					
 					$.when($.each(locations, function(i, location) {
+
+						if (!location.departmentsNumber) {
+							location.departmentsNumber = 0;
+						}
 												
 						let $tr = $('<tr data-id="' + location.id + '">').append(
 							$('<td class="location-name">').text(location.name),
@@ -819,12 +827,12 @@ $(document).ready( function () {
 				
 				$("#addLocationName").val("");
 
-				console.log(result);
+				//console.log(result);
 
 				var newLocation = result['data'];
 
-				if (!newLocation.hasOwnProperty('departmentsNumber')) {
-					newLocation.departmentsNumber = "0";
+				if (!newLocation.departmentsNumber) {
+					newLocation.departmentsNumber = 0;
 				}
 
 				let $tr = $('<tr data-id="' + newLocation.id + '">').append(
@@ -890,13 +898,13 @@ $(document).ready( function () {
 				
 				$("#editLocationName").val("");
 
-				console.log(result);
+				//console.log(result);
 
 				var editLocation = result['data'];
 				
 				//update row's entry with new value
 				
-				$currentLocationRow.find("td.location-name").html( editLocation.name );
+				$currentLocationRow.find("td.location-name").html(editLocation.name);
 
 				$("#confirmEditLocationAlert").html("<div class='alert alert-success' role='alert'>Location successfully edited.</div>");
 
@@ -962,7 +970,7 @@ $(document).ready( function () {
 					dataType: "json",
 					success: function(result) {
 
-						console.log(result);
+						//console.log(result);
 						
 						if (result.status.name == "ok") {
 

@@ -33,6 +33,72 @@
 
 	}	
 
+	$query = $conn->prepare('SELECT COUNT(id) as totalPersonnel FROM personnel WHERE departmentID = ?');
+	
+	$query->bind_param("i", $_POST['id']);
+
+	$query->execute();
+
+	if (false === $query) {
+
+		$output['status']['code'] = "400";
+		$output['status']['name'] = "executed";
+		$output['status']['description'] = "query failed";	
+		$output['data'] = [];
+
+		mysqli_close($conn);
+
+		echo json_encode($output); 
+
+		exit;
+
+	}
+
+	$result = $query->get_result();
+		
+	$row = $result->fetch_array(MYSQLI_NUM);
+
+	if( $row[0] > 0 )
+	{
+		
+		$output['status']['code'] = "200";
+		$output['status']['name'] = "violation";
+		$output['status']['description'] = "success";
+		$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+		$output['data'] = [];
+			
+	} else {
+		
+		$query = $conn->prepare('DELETE FROM department WHERE id = ?');
+
+		$query->bind_param("i", $_POST['id']);
+
+		$query->execute();
+
+		if (false === $query) {
+
+			$output['status']['code'] = "400";
+			$output['status']['name'] = "executed";
+			$output['status']['description'] = "query failed";	
+			$output['data'] = [];
+
+			mysqli_close($conn);
+
+			echo json_encode($output); 
+
+			exit;
+
+		}
+		
+		$output['status']['code'] = "200";
+		$output['status']['name'] = "ok";
+		$output['status']['description'] = "success";
+		$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+		$output['data'] = [];		
+		
+	}
+	
+	/*
 	// SQL statement accepts parameters and so is prepared to avoid SQL injection.
 	// $_REQUEST used for development / debugging. Remember to change to $_POST for production
 
@@ -75,7 +141,8 @@
 		$output['data'] = [];
 		
 	}
-	
+	*/
+
 	mysqli_close($conn);
 
 	echo json_encode($output); 
