@@ -33,7 +33,6 @@
 
 	}
 	
-	//Hasta aqui todo bien, a partir de aqui es lo que hay que trabajar
 
 	$query = $conn->prepare('SELECT COUNT(id) as departmentsNumber FROM department WHERE locationID = ?');
 
