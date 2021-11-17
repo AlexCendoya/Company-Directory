@@ -1,0 +1,114 @@
+body {
+    padding-top: 40px;
+}
+
+/*navbar*/
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
+}
+
+main {
+    padding-top: 20px;
+}
+
+/*cards and tables*/
+
+
+.card {
+    margin-top: 1%;
+    margin-right: 1%;
+    margin-left: 1%;
+    max-height: 100vh;
+}
+
+.table-title {
+    vertical-align: middle;
+}
+
+.table-title .btn {
+    float: right !important;
+}
+
+.card-body .table thead tr th {
+    text-align: center;
+} 
+
+td {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.modal-dialog .modal-content .modal-body table tr td {
+    text-align: left;
+}
+
+/*preloader*/
+
+#preloader {
+    background: white url(loading-17.gif) no-repeat center center;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    z-index: 100;
+}
+
+
+/*media query for mobile phones*/
+
+
+@media screen and (max-width: 376px) {
+    
+    body {
+        padding-top: 10px;
+    }
+
+    .card {
+        margin-top: 10%;
+        margin-right: 0.5%;
+        margin-left: 0.5%;
+        max-height: 100vh;
+        padding-bottom: 25px !important;
+    }
+
+    .card-body {
+        font-size: 13px;
+    }
+    
+    #departmentsCard .table-striped {
+        font-size: 11px;
+    }
+    
+
+    .table-striped tr td {
+        padding: 0;
+    }
+
+}
+
+@media screen and (min-width: 321px) and (max-width: 376px) {
+    /*this one is particularly for iPhoneX*/
+    #departmentsCard .table-striped {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .navbar-brand {
+        display: none;
+    }
+
+}
+/*media query for mobile phones in horizontal try also with height, max 411*/
+
+@media screen and (min-width: 568px) and (max-width: 736px) {
+
+    .table-striped tr td {
+        padding: 0;
+    }
+
+}
