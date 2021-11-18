@@ -208,6 +208,8 @@ $(document).ready( function () {
 		$("#editPersonnelModal").modal("hide");
 
 		$("#confirmEditPersonnel-submit-btn").attr( "disabled", false );
+		
+		//$("#cancelEditPersonnel-submit-btn").attr( "disabled", false );	
 
 		$("#confirmEditPersonnelAlert").html("");
 
@@ -263,7 +265,7 @@ $(document).ready( function () {
 				$("#editEmployeeEmail").val("");
 				$("#addEmployeeDepartment").val(0);
 
-				console.log(result);
+				//console.log(result);
 
 				var editEmployee = result['data'];
 				
@@ -344,19 +346,17 @@ $(document).ready( function () {
 				dataType: "json",
 				success: function(result) {
 
-					console.log(result);
+					//console.log(result);
 	
 					if (result.status.name == "ok") {
 
 						console.log(result["data"]);
-
-						$('#editEmployeeLastName').val( result.data.lastName );
-						$('#editEmployeeFirstName').val( result.data.firstName );
-						$('#editEmployeeEmail').val( result.data.email );
-						$('#editEmployeeJobTitle').val( result.data.jobTitle );
-						$('#editEmployeeDepartment').val( $currentPersonnelRow.find('.personnelDepartment').data("department-id"));//This one does work
-
-						//They won't show!!
+							
+						$('#editEmployeeLastName').val( result.data.personnel[0].lastName );
+						$('#editEmployeeFirstName').val( result.data.personnel[0].firstName );
+						$('#editEmployeeEmail').val( result.data.personnel[0].email );
+						$('#editEmployeeJobTitle').val( result.data.personnel[0].jobTitle );
+						$('#editEmployeeDepartment').val( result.data.personnel[0].departmentID );
 
 						$("#editPersonnelModal").modal("show");
 					}
@@ -403,7 +403,7 @@ $(document).ready( function () {
 					dataType: "json",
 					success: function(result) {
 	
-						console.log(result);
+						//console.log(result);
 	
 						if (result.status.name == "ok") {
 							
@@ -507,11 +507,18 @@ $(document).ready( function () {
 					 
 									column.data().unique().sort().each( function ( d, j ) {
 										select.append( '<option value="'+d+'">'+d+'</option>' )
-									} );
-								} );
+									});
+								});
+								
+								
+								
 							}
 						}).columns.adjust().responsive.recalc(); 
 
+						
+					}).then(function() {
+						
+						$('#departmentsCard').css("display", "none");
 						
 					});
 
@@ -682,14 +689,12 @@ $(document).ready( function () {
 				dataType: "json",
 				success: function(result) {
 					
-					console.log(result);
+					//console.log(result);
 
 					if (result.status.name == "ok") {
 
 						$('#editDepartmentName').val( result["data"][0]["name"] );
-			
-
-
+						$('#editDepartmentLocation').val(result["data"][0]["locationID"]);
 
 						$("#editDepartmentModal").modal("show");
 
@@ -702,8 +707,6 @@ $(document).ready( function () {
 
 			});
 
-			$('#editDepartmentLocation').val( $('#editDepartmentLocation option:contains(' + $(this).closest('tr').find('.location-name').text() + ')').val() );
-			//moving inside the AJAX? it only shows london
 
 		});
 
@@ -723,7 +726,7 @@ $(document).ready( function () {
 				dataType: "json",
 				success: function(result) {
 
-					console.log(result);
+					//console.log(result);
 
 					if (result.status.name == "ok") {
 
@@ -837,10 +840,14 @@ $(document).ready( function () {
 						
 							$("#locationTable").DataTable({
 								responsive: true,
-								scrollY: "37vh", //minimum size with no scroll bar
+								scrollY: "37vh", //maximum size with no scroll bar
 								paging: false
 							}).columns.adjust().responsive.recalc(); 
 
+						}).then(function() {
+							
+							$('#locationCard').css("display", "none");
+							
 						});
 
 					});
@@ -1005,7 +1012,7 @@ $(document).ready( function () {
 				dataType: "json",
 				success: function(result) {
 
-					console.log(result);
+					//console.log(result);
 
 					if (result.status.name == "ok") {
 
@@ -1040,7 +1047,7 @@ $(document).ready( function () {
 				dataType: "json",
 				success: function(result) {
 
-					console.log(result);
+					//console.log(result);
 					
 					if (result.status.name == "ok") {
 
@@ -1104,31 +1111,46 @@ $(document).ready( function () {
 
 	
 	$('#option1, #option2, #option3').click(function () {
-
+		
+		$('#personnelCard').css("display", "none");
+		$('#departmentsCard').css("display", "none");
+		$('#locationCard').css("display", "none");
+		
+		$('#choosePersonnel').removeClass("active");
+		$('#chooseDepartments').removeClass("active");
+		$('#chooseLocation').removeClass("active");
+		
 		if (this.id == 'option1') {
-			$('#personnelCard').show();
-			$('#departmentsCard').hide();
-			$('#locationCard').hide();
+			
+			$('#personnelCard').css("display", "block");
+			
+			$('#choosePersonnel').addClass("active");
+			
 		} else if (this.id == 'option2') {
-			$('#departmentsCard').show();
-			$('#personnelCard').hide();
-			$('#locationCard').hide();
+			
+			$('#departmentsCard').css("display", "block");
+			
+			$('#chooseDepartments').addClass("active");
+			
 		} else if (this.id == 'option3') {
-			$('#locationCard').show();
-			$('#personnelCard').hide();
-			$('#departmentsCard').hide();
+			
+			$('#locationCard').css("display", "block");
+			
+			$('#chooseLocation').addClass("active");
+			
 		}
+		
+		$("#personnelTable").DataTable().draw();
+		$("#departmentsTable").DataTable().draw();
+		$("#locationTable").DataTable().draw();
+		
+		//redraw again when in mobile view
+		$("#personnelTable").DataTable().draw();
+		$("#departmentsTable").DataTable().draw();
+		$("#locationTable").DataTable().draw();
+		
 	});
-
-	/*
-	function hideAllCards() {
-		$('#personnelCard').hide();
-		$('#departmentsCard').hide();
-		$('#locationCard').hide();
-	}	
 	
-	hideAllCards();
-	*/
 
 	window.onresize = function(event) {
 		document.location.reload(true);

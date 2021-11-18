@@ -103,7 +103,7 @@ td {
     }
 
 }
-/*media query for mobile phones in horizontal try also with height, max 411*/
+/*media query for mobile phones in horizontal*/
 
 @media screen and (min-width: 568px) and (max-width: 736px) {
 
