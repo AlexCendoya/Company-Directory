@@ -153,6 +153,8 @@ $(document).ready( function () {
 
 				//console.log(result);
 
+				$("#personnelTable").DataTable().destroy();
+
 				var newEmployee = result['data'];
 
 				let $tr = $('<tr data-id="' + newEmployee.id + '">').append(
@@ -170,6 +172,8 @@ $(document).ready( function () {
 					$('<span style="display:none" class="personnelJobTitle">').text(newEmployee.jobTitle)
 
 				).appendTo('#personnelTable');
+
+				$('#personnelTable').DataTable({responsive: true, scrollY: "60vh",paging: false}).draw();
 				
 				$("#addEmployeeFirstName").val("");
 				$("#addEmployeeLastName").val("");
@@ -335,8 +339,6 @@ $(document).ready( function () {
 
 			$("#notEmptyPersonnelAlert2").html("");
 
-			// change this
-
 			$.ajax({
 				url: "php/getPersonnelByID.php",
 				type: 'POST',
@@ -406,12 +408,16 @@ $(document).ready( function () {
 						//console.log(result);
 	
 						if (result.status.name == "ok") {
+
+							$("#personnelTable").DataTable().destroy();
 							
 							$currentPersonnelRow.remove();
 
 							$('#confirmDeletePersonnelAlert').html("<div class='alert alert-success' role='alert'>Employee successfully deleted.</div>");
 
 							$("#confirmDeletePersonnel-submit-btn").attr( "disabled", true );
+
+							$('#personnelTable').DataTable({responsive: true, scrollY: "60vh", paging: false}).draw();
 						}
 	
 					},
@@ -441,7 +447,7 @@ $(document).ready( function () {
 	/***************/
 	/**DEPARTMENTS**/
 	/***************/
-	
+
 	
 	//Populate, edit and delete department table
 
@@ -571,6 +577,8 @@ $(document).ready( function () {
 
 				//console.log(result);
 
+				$("#departmentsTable").DataTable().destroy(); //do it also for deleting
+
 				var newDepartment = result['data'];
 
 				if (!newDepartment.totalPersonnel) {
@@ -586,6 +594,11 @@ $(document).ready( function () {
 						'<button class="deleteDepartment-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
 					)
 				).appendTo('#departmentsTable');
+
+				$('#departmentsTable').DataTable({responsive: true, scrollY: "60vh", paging: false}).draw();
+
+				$('#addEmployeeDepartment').append('<option value="' + newDepartment.id + '">' + newDepartment.departmentName + ' (' + newDepartment.locationName + ')</option>');
+				$('#editEmployeeDepartment').append('<option value="' + newDepartment.id + '">' + newDepartment.departmentName + ' (' + newDepartment.locationName + ')</option>');
 
 				registerEditDeleteDepartmentButtons();
 
@@ -745,13 +758,19 @@ $(document).ready( function () {
 
 						$('#confirmDeleteDepartment-submit-btn').click(function() {
 
+							$('#addEmployeeDepartment').find(`option[value="${$currentDepartmentRow.data('id')}"]`).remove();					
+							$('#editEmployeeDepartment').find(`option[value="${$currentDepartmentRow.data('id')}"]`).remove();
+
+							$("#departmentsTable").DataTable().destroy();
+
 							$currentDepartmentRow.remove();
 
 							$('#confirmDeleteDepartmentAlert').html("<div class='alert alert-success' role='alert'>Department successfully deleted.</div>");
 	
 							$("#confirmDeleteDepartment-submit-btn").attr("disabled", true);
 
-
+							$('#departmentsTable').DataTable({responsive: true, scrollY: "60vh", paging: false}).draw();
+							//I am not reincluding the filters, but it works for the moment 	
 						});
 
 						$('#cancelDeleteDepartment-submit-btn').click(function() {
@@ -840,7 +859,7 @@ $(document).ready( function () {
 						
 							$("#locationTable").DataTable({
 								responsive: true,
-								scrollY: "37vh", //maximum size with no scroll bar
+								//scrollY: "37vh", //maximum size with no scroll bar
 								paging: false
 							}).columns.adjust().responsive.recalc(); 
 
@@ -899,6 +918,8 @@ $(document).ready( function () {
 
 				//console.log(result);
 
+				$("#locationTable").DataTable().destroy();
+
 				var newLocation = result['data'];
 
 				if (!newLocation.departmentsNumber) {
@@ -914,8 +935,13 @@ $(document).ready( function () {
 						'<button class="deleteLocation-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
 					)
 				).appendTo('#locationTable');
-				
-				registerEditDeleteLocationButtons();
+
+				$('#locationTable').DataTable({responsive: true, paging: false}).draw();
+
+				$('#addDepartmentLocation').append(`<option value="${newLocation.id}">${newLocation.name}</option>`);						
+				$('#editDepartmentLocation').append(`<option value="${newLocation.id}">${newLocation.name}</option>`);
+
+				registerEditDeleteLocationButtons()
 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -924,7 +950,8 @@ $(document).ready( function () {
 		});
 
 	});
-	
+
+
 	var $currentLocationRow;
 	
 	$("#editLocation-submit-btn").click(function() {
@@ -979,6 +1006,7 @@ $(document).ready( function () {
 				$("#confirmEditLocationAlert").html("<div class='alert alert-success' role='alert'>Location successfully edited.</div>");
 
 				$("#confirmEditLocation-submit-btn").attr("disabled", true);
+
 			
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -1033,7 +1061,6 @@ $(document).ready( function () {
 
 		//Delete button
 
-
 		$(".deleteLocation-btn").click(function() {
 
 			$currentLocationRow = $(this).closest('tr');
@@ -1063,14 +1090,20 @@ $(document).ready( function () {
 			
 						$('#confirmDeleteLocationAlert').html("");
 			
-			
 						$('#confirmDeleteLocation-submit-btn').click(function() {
-			
+
+							$('#addDepartmentLocation').find(`option[value="${$currentLocationRow.data('id')}"]`).remove();					
+							$('#editDepartmentLocation').find(`option[value="${$currentLocationRow.data('id')}"]`).remove();
+
+							$("#locationTable").DataTable().destroy();
+
 							$currentLocationRow.remove();
-			
+
 							$('#confirmDeleteLocationAlert').html("<div class='alert alert-success' role='alert'>Location successfully deleted.</div>");
 			
-							$("#confirmDeleteLocation-submit-btn").attr( "disabled", true );			
+							$("#confirmDeleteLocation-submit-btn").attr( "disabled", true );
+
+							$('#locationTable').DataTable({responsive: true, paging: false}).draw();			
 						
 						});
 
@@ -1121,23 +1154,24 @@ $(document).ready( function () {
 		$('#chooseLocation').removeClass("active");
 		
 		if (this.id == 'option1') {
-			
+
 			$('#personnelCard').css("display", "block");
 			
 			$('#choosePersonnel').addClass("active");
+
 			
 		} else if (this.id == 'option2') {
 			
 			$('#departmentsCard').css("display", "block");
 			
 			$('#chooseDepartments').addClass("active");
-			
+
 		} else if (this.id == 'option3') {
 			
 			$('#locationCard').css("display", "block");
 			
 			$('#chooseLocation').addClass("active");
-			
+
 		}
 		
 		$("#personnelTable").DataTable().draw();
@@ -1148,6 +1182,7 @@ $(document).ready( function () {
 		$("#personnelTable").DataTable().draw();
 		$("#departmentsTable").DataTable().draw();
 		$("#locationTable").DataTable().draw();
+
 		
 	});
 	
@@ -1159,3 +1194,6 @@ $(document).ready( function () {
 	$("#preloader").hide();
 
 });
+
+
+//AJAX calls para cambiar inmediatamente el contenido editado de las otras tablas
