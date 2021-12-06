@@ -1194,6 +1194,3 @@ $(document).ready( function () {
 	$("#preloader").hide();
 
 });
-
-
-//AJAX calls para cambiar inmediatamente el contenido editado de las otras tablas
