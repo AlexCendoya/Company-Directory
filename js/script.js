@@ -7,92 +7,99 @@ $(document).ready( function () {
 	
 	//Populate, edit and delete personnel table
 	
-	$.ajax({
-		url: "php/getAll.php",
-		type: 'POST',
-		dataType: "json",
-		success: function(result) {
-
-			//console.log(result);
-
-			if (result.status.name == "ok") {
-
-				var all = result['data'];
-				
-				//console.log(all);
-				
-				$(function() {
-					
-					$.when($.each(all, function(i, personnel) {
-						let $tr = $('<tr data-id=' + personnel.id +'>').append(
-							$('<td class="personnelLastName">').text(personnel.lastName),
-							$('<td class="personnelFirstName">').text(personnel.firstName),
-							$('<td class="personnelDepartment" data-department-id="' + personnel.departmentID + '">').text(personnel.department),
-							$('<td class="personnelLocation">').text(personnel.location),
-							
-							$('<td class="personnelOptions">').html(
-								'<button class="info-btn btn text-primary" title="view"><i class="fas fa-info"></i></button>' + 
-								'<button class="editEmployee-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
-								'<button class="deletePersonnel-btn btn text-danger" title="delete""><i class="fas fa-trash-alt"></i></button>'
-							),
-							$('<span style="display:none" class="personnelEmail">').text(personnel.email),
-							$('<span style="display:none" class="personnelJobTitle">').text(personnel.jobTitle)
-
-						).appendTo('#personnelTable tbody');
-						
-					})).then(function() {
-							
-						$.when( 
-							
-							registerEditDeleteEmployeeButtons()
-						
-						).then(function() {
-						
-							$("#personnelTable").DataTable({
-								responsive: true,
-								scrollY: "60vh",
-								paging: false,
-								initComplete: function () {
-									this.api().columns().every( function () {
-										var column = this;
-
-										var some = column.index();
-										if (column.index() == 4) return;
-
-										var select = $('<select><option value=""></option></select>')
-											.appendTo( $(column.footer()).empty() )
-											.on( 'change', function () {
-												var val = $.fn.dataTable.util.escapeRegex(
-													$(this).val()
-												);
-
-												column
-													.search( val ? '^'+val+'$' : '', true, false )
-													.draw();
-											} );
-
-										column.data().unique().sort().each( function ( d, j ) {
-											select.append( '<option value="'+d+'">'+d+'</option>' )
-										});
-									});
-								}
-
-							}).columns.adjust().responsive.recalc(); 
-
-							
-						});
-						
-					});
-					
-				});
-			}
-		},
-		error: function(jqXHR, textStatus, errorThrown) {
-			console.log(jqXHR);
-		}
+	function getAllPersonnel()
+	{
 		
-	});
+		$.ajax({
+			url: "php/getAll.php",
+			type: 'POST',
+			dataType: "json",
+			success: function(result) {
 
+				//console.log(result);
+
+				if (result.status.name == "ok") {
+
+					var all = result['data'];
+
+					//console.log(all);
+
+					$(function() {
+
+						$.when($.each(all, function(i, personnel) {
+							let $tr = $('<tr data-id=' + personnel.id +'>').append(
+								$('<td class="personnelLastName">').text(personnel.lastName),
+								$('<td class="personnelFirstName">').text(personnel.firstName),
+								$('<td class="personnelDepartment" data-department-id="' + personnel.departmentID + '">').text(personnel.department),
+								$('<td class="personnelLocation">').text(personnel.location),
+
+								$('<td class="personnelOptions">').html(
+									'<button class="info-btn btn text-primary" title="view"><i class="fas fa-info"></i></button>' + 
+									'<button class="editEmployee-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
+									'<button class="deletePersonnel-btn btn text-danger" title="delete""><i class="fas fa-trash-alt"></i></button>'
+								),
+								$('<span style="display:none" class="personnelEmail">').text(personnel.email),
+								$('<span style="display:none" class="personnelJobTitle">').text(personnel.jobTitle)
+
+							).appendTo('#personnelTable tbody');
+
+						})).then(function() {
+
+							$.when( 
+
+								registerEditDeleteEmployeeButtons()
+
+							).then(function() {
+
+								$("#personnelTable").DataTable({
+									destroy: true,
+									responsive: true,
+									scrollY: "60vh",
+									paging: false,
+									initComplete: function () {
+										this.api().columns().every( function () {
+											var column = this;
+
+											var some = column.index();
+											if (column.index() == 4) return;
+
+											var select = $('<select><option value=""></option></select>')
+												.appendTo( $(column.footer()).empty() )
+												.on( 'change', function () {
+													var val = $.fn.dataTable.util.escapeRegex(
+														$(this).val()
+													);
+
+													column
+														.search( val ? '^'+val+'$' : '', true, false )
+														.draw();
+												} );
+
+											column.data().unique().sort().each( function ( d, j ) {
+												select.append( '<option value="'+d+'">'+d+'</option>' )
+											});
+										});
+									}
+
+								}).columns.adjust().responsive.recalc(); 
+
+							});
+
+						});
+
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(jqXHR);
+			}
+
+		});
+		
+	}
+	
+	getAllPersonnel();
+	
 	//add button
 
 	$("#addEmployee-btn").click(function() {
@@ -450,96 +457,102 @@ $(document).ready( function () {
 
 	
 	//Populate, edit and delete department table
+	
+	function getAllDepartments()
+	{
+		
+		$.ajax({
+			url: "php/getAllDepartments.php",
+			type: 'POST',
+			dataType: "json",
+			success: function(result) {
 
-	$.ajax({
-		url: "php/getAllDepartments.php",
-		type: 'POST',
-		dataType: "json",
-		success: function(result) {
+				//console.log(result);
 
-			//console.log(result);
+				if (result.status.name == "ok") {
 
-			if (result.status.name == "ok") {
+					var departments = result['data'];
 
-				var departments = result['data'];
+					$(function() {
 
-				$(function() {
-					
-					$.when($.each(departments, function(i, department) {
+						$.when($.each(departments, function(i, department) {
 
-						if (!department.totalPersonnel) {
-							department.totalPersonnel = 0;
-						}
-
-						let $tr = $('<tr data-id="' + department.id + '">').append(
-							$('<td class="department-name">').text(department.name),
-							$('<td class="location-name">').text(department.location),
-							$('<td>').text(department.totalPersonnel),
-							$('<td class="departmentOptions">').html(
-								'<button class="editDepartment-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
-								'<button class="deleteDepartment-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
-							)
-						).appendTo('#departmentsTable tbody');
-						
-						//populate dropdown menu in add and edit modals
-						
-						$('#addEmployeeDepartment').append('<option value="' + department.id + '">' + department.name + ' (' + department.location + ')</option>');
-						$('#editEmployeeDepartment').append('<option value="' + department.id + '">' + department.name + ' (' + department.location + ')</option>');
-
-					})).then( function() {
-						
-						$("#departmentsTable").DataTable({
-							responsive: true,
-							scrollY: "60vh", //maximum with no table overflow on phones
-							paging: false,
-							initComplete: function () {
-								this.api().columns().every( function () {
-									var column = this;
-
-									var some = column.index();
-									if (column.index() == 3) return;
-
-									var select = $('<select><option value=""></option></select>')
-										.appendTo( $(column.footer()).empty() )
-										.on( 'change', function () {
-											var val = $.fn.dataTable.util.escapeRegex(
-												$(this).val()
-											);
-					 
-											column
-												.search( val ? '^'+val+'$' : '', true, false )
-												.draw();
-										} );
-					 
-									column.data().unique().sort().each( function ( d, j ) {
-										select.append( '<option value="'+d+'">'+d+'</option>' )
-									});
-								});
-								
-								
-								
+							if (!department.totalPersonnel) {
+								department.totalPersonnel = 0;
 							}
-						}).columns.adjust().responsive.recalc(); 
 
-						
-					}).then(function() {
-						
-						$('#departmentsCard').css("display", "none");
-						
+							let $tr = $('<tr data-id="' + department.id + '">').append(
+								$('<td class="department-name">').text(department.name),
+								$('<td class="location-name">').text(department.location),
+								$('<td>').text(department.totalPersonnel),
+								$('<td class="departmentOptions">').html(
+									'<button class="editDepartment-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
+									'<button class="deleteDepartment-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
+								)
+							).appendTo('#departmentsTable tbody');
+
+							//populate dropdown menu in add and edit modals
+
+							$('#addEmployeeDepartment').append('<option value="' + department.id + '">' + department.name + ' (' + department.location + ')</option>');
+							$('#editEmployeeDepartment').append('<option value="' + department.id + '">' + department.name + ' (' + department.location + ')</option>');
+
+						})).then(function() {
+
+							$("#departmentsTable").DataTable({
+								destroy: true,
+								responsive: true,
+								scrollY: "60vh", //maximum with no table overflow on phones
+								paging: false,
+								initComplete: function () {
+									this.api().columns().every( function () {
+										var column = this;
+
+										var some = column.index();
+										if (column.index() == 3) return;
+
+										var select = $('<select><option value=""></option></select>')
+											.appendTo( $(column.footer()).empty() )
+											.on( 'change', function () {
+												var val = $.fn.dataTable.util.escapeRegex(
+													$(this).val()
+												);
+
+												column
+													.search( val ? '^'+val+'$' : '', true, false )
+													.draw();
+											} );
+
+										column.data().unique().sort().each( function ( d, j ) {
+											select.append( '<option value="'+d+'">'+d+'</option>' )
+										});
+									});
+
+								}
+
+							}).columns.adjust().responsive.recalc(); 
+
+
+						}).then(function() {
+
+							$('#departmentsCard').css("display", "none");
+
+						});
+
+						registerEditDeleteDepartmentButtons();
+
 					});
 
-					registerEditDeleteDepartmentButtons();
+				}
 
-				});
-
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(jqXHR);
 			}
+		});
 
-		},
-		error: function(jqXHR, textStatus, errorThrown) {
-			console.log(jqXHR);
-		}
-	});
-
+	}
+	
+	getAllDepartments();
 	
 	//Add a new department
 
@@ -577,7 +590,7 @@ $(document).ready( function () {
 
 				//console.log(result);
 
-				$("#departmentsTable").DataTable().destroy(); //do it also for deleting
+				$("#departmentsTable").DataTable().destroy();
 
 				var newDepartment = result['data'];
 
@@ -599,6 +612,16 @@ $(document).ready( function () {
 
 				$('#addEmployeeDepartment').append('<option value="' + newDepartment.id + '">' + newDepartment.departmentName + ' (' + newDepartment.locationName + ')</option>');
 				$('#editEmployeeDepartment').append('<option value="' + newDepartment.id + '">' + newDepartment.departmentName + ' (' + newDepartment.locationName + ')</option>');
+				
+				$("#addEmployeeDepartment").append($("#addEmployeeDepartment option").remove().sort(function(a, b) {
+					var at = $(a).text(), bt = $(b).text();
+					return (at > bt)?1:((at < bt)?-1:0);
+				}));
+				
+				$("#editEmployeeDepartment").append($("#editEmployeeDepartment option").remove().sort(function(a, b) {
+					var at = $(a).text(), bt = $(b).text();
+					return (at > bt)?1:((at < bt)?-1:0);
+				}));
 
 				registerEditDeleteDepartmentButtons();
 
@@ -643,7 +666,6 @@ $(document).ready( function () {
 
 	$("#confirmEditDepartment-submit-btn").click(function() {
 		
-
 		$.ajax({
 			url: "php/editDepartment.php",
 			type: 'POST',
@@ -668,14 +690,72 @@ $(document).ready( function () {
 				$("#confirmEditDepartmentAlert").html("<div class='alert alert-success' role='alert'>Department successfully edited.</div>");
 				
 				$("#confirmEditDepartment-submit-btn").attr( "disabled", true );
+				
+				
+				$("#locationTable").empty().append("<tbody></tbody>");
+				
+				getAllLocations();		
+				
+				$("#personnelTable").empty().append("<tbody></tbody>");
+				
+				getAllPersonnel();
+				
+				refreshAddEditPersonnel();	
+				
+				
+				//$("#departmentsTable").empty().append("<tbody></tbody>");
+								
+				//getAllDepartments();
+				
+				refreshAddEditDepartments();
+				
+				
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log(jqXHR);
 			}
+			
 		});
 
-
 	});
+	
+	function refreshAddEditPersonnel() {
+		
+		$.ajax({
+			url: "php/getAllDepartments.php",
+			type: 'POST',
+			dataType: "json",
+			success: function(result) {
+
+				//console.log(result);
+
+				if (result.status.name == "ok") {
+
+					var departments = result['data'];
+
+					$(function() {
+
+						$('#addEmployeeDepartment').empty();
+						$('#editEmployeeDepartment').empty();
+
+						$.each(departments, function(i, department) {
+
+							//populate dropdown menu in add and edit modals
+
+							$('#addEmployeeDepartment').append('<option value="' + department.id + '">' + department.name + ' (' + department.location + ')</option>');
+							$('#editEmployeeDepartment').append('<option value="' + department.id + '">' + department.name + ' (' + department.location + ')</option>');
+
+						});
+
+					});
+
+				}
+
+			}
+			
+		});
+		
+	}
 	
 	function registerEditDeleteDepartmentButtons() {
 
@@ -815,74 +895,80 @@ $(document).ready( function () {
 
 	//Populate, edit and delete location table
 	
-	$.ajax({
-		url: "php/getAllLocations.php",
-		type: 'POST',
-		dataType: "json",
-		success: function(result) {
+	function getAllLocations() 
+	{
+		$.ajax({
+			url: "php/getAllLocations.php",
+			type: 'POST',
+			dataType: "json",
+			success: function(result) {
 
-			//console.log(result);
+				//console.log(result);
 
-			if (result.status.name == "ok") {
+				if (result.status.name == "ok") {
 
-				var locations = result['data'];
+					var locations = result['data'];
 
-				$(function() {
-					
-					$.when($.each(locations, function(i, location) {
-
-						if (!location.departmentsNumber) {
-							location.departmentsNumber = 0;
-						}
-												
-						let $tr = $('<tr data-id="' + location.id + '">').append(
-							$('<td class="location-name">').text(location.name),
-							$('<td>').text(location.departmentsNumber),
-							$('<td class="locationOptions">').html(
-								'<button class="editLocation-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
-								'<button class="deleteLocation-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
-							)
-						).appendTo('#locationTable tbody');
-
-						//populate dropdown menu in add and edit modals
-					
-						$('#addDepartmentLocation').append(`<option value="${location.id}">${location.name}</option>`);						
-						$('#editDepartmentLocation').append(`<option value="${location.id}">${location.name}</option>`);
-
-					})).then(function() {
-
-						$.when(
-
-						registerEditDeleteLocationButtons()
-
-						).then(function() {
+					$(function() {
 						
-							$("#locationTable").DataTable({
-								responsive: true,
-								//scrollY: "37vh", //maximum size with no scroll bar
-								paging: false
-							}).columns.adjust().responsive.recalc(); 
+						$.when($.each(locations, function(i, location) {
 
-						}).then(function() {
+							if (!location.departmentsNumber) {
+								location.departmentsNumber = 0;
+							}
+													
+							let $tr = $('<tr data-id="' + location.id + '">').append(
+								$('<td class="location-name">').text(location.name),
+								$('<td>').text(location.departmentsNumber),
+								$('<td class="locationOptions">').html(
+									'<button class="editLocation-btn btn text-secondary" title="edit"><i class="fas fa-marker"></i></button>' +
+									'<button class="deleteLocation-btn btn text-danger" title="delete"><i class="fas fa-trash-alt"></i></button>'
+								)
+							).appendTo('#locationTable tbody');
+
+							//populate dropdown menu in add and edit modals
+						
+							$('#addDepartmentLocation').append(`<option value="${location.id}">${location.name}</option>`);						
+							$('#editDepartmentLocation').append(`<option value="${location.id}">${location.name}</option>`);
+
+						})).then(function() {
+
+							$.when(
+
+							registerEditDeleteLocationButtons()
+
+							).then(function() {
 							
-							$('#locationCard').css("display", "none");
-							
+								$("#locationTable").DataTable({
+									destroy: true,
+									responsive: true,
+									scrollY: "37vh", //maximum size with no scroll bar on basic locations
+									paging: false
+								}).columns.adjust().responsive.recalc(); 
+
+							}).then(function() {
+								
+								$('#locationCard').css("display", "none");
+								
+							});
+
 						});
+						
 
 					});
-					
 
-				});
+				}
 
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(jqXHR);
 			}
 
-		},
-		error: function(jqXHR, textStatus, errorThrown) {
-			console.log(jqXHR);
-		}
+		});
+	}
 
-	});
-	
+	getAllLocations();
+
 	//Add a new location
 
 	$("#addLocation-btn").click(function() {
@@ -940,6 +1026,16 @@ $(document).ready( function () {
 
 				$('#addDepartmentLocation').append(`<option value="${newLocation.id}">${newLocation.name}</option>`);						
 				$('#editDepartmentLocation').append(`<option value="${newLocation.id}">${newLocation.name}</option>`);
+				
+				$("#addDepartmentLocation").append($("#addDepartmentLocation option").remove().sort(function(a, b) {
+					var at = $(a).text(), bt = $(b).text();
+					return (at > bt)?1:((at < bt)?-1:0);
+				}));
+				
+				$("#editDepartmentLocation").append($("#editDepartmentLocation option").remove().sort(function(a, b) {
+					var at = $(a).text(), bt = $(b).text();
+					return (at > bt)?1:((at < bt)?-1:0);
+				}));
 
 				registerEditDeleteLocationButtons()
 
@@ -1006,7 +1102,21 @@ $(document).ready( function () {
 				$("#confirmEditLocationAlert").html("<div class='alert alert-success' role='alert'>Location successfully edited.</div>");
 
 				$("#confirmEditLocation-submit-btn").attr("disabled", true);
+				
+				
+				$("#departmentsTable").empty().append("<tbody></tbody>");
+								
+				getAllDepartments();
+				
+				refreshAddEditDepartments();
+				
 
+				$("#personnelTable").empty().append("<tbody></tbody>");
+								
+				getAllPersonnel();
+				
+				refreshAddEditPersonnel();
+				
 			
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -1016,6 +1126,52 @@ $(document).ready( function () {
 
 
 	});
+	
+	function refreshAddEditDepartments() {
+		
+		$.ajax({
+			url: "php/getAllLocations.php",
+			type: 'POST',
+			dataType: "json",
+			success: function(result) {
+
+				if (result.status.name == "ok") {
+
+					var locations = result['data'];
+
+					$(function() {
+						
+						$('#addDepartmentLocation').empty();
+						$('#editDepartmentLocation').empty();
+
+						$.each(locations, function(i, location) {
+
+							//populate dropdown menu in add and edit modals
+
+							$('#addDepartmentLocation').append(`<option value="${location.id}">${location.name}</option>`);						
+							$('#editDepartmentLocation').append(`<option value="${location.id}">${location.name}</option>`);
+
+						});
+						
+						$("#addDepartmentLocation").append($("#addDepartmentLocation option").remove().sort(function(a, b) {
+							var at = $(a).text(), bt = $(b).text();
+							return (at > bt)?1:((at < bt)?-1:0);
+						}));
+						
+						$("#editDepartmentLocation").append($("#editDepartmentLocation option").remove().sort(function(a, b) {
+							var at = $(a).text(), bt = $(b).text();
+							return (at > bt)?1:((at < bt)?-1:0);
+						}));
+
+					});
+					
+				}
+				
+			}
+			
+		});
+		
+	}
 	
 	function registerEditDeleteLocationButtons() {	
 		
