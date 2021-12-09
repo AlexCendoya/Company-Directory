@@ -192,6 +192,12 @@ $(document).ready( function () {
 
 				//$("#addEmployee-submit-btn").attr( "disabled", true );
 
+				//Ensure the department personnel column is affected
+				$("#departmentsTable").empty().append("<tbody></tbody>");
+					
+				getAllDepartments();
+				
+				refreshAddEditDepartments();
 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -287,9 +293,18 @@ $(document).ready( function () {
 				$currentPersonnelRow.find("td.personnelDepartment").html(editEmployee.departmentName);  
 				$currentPersonnelRow.find("td.personnelLocation").html(editEmployee.locationName);  
 
+				//Ensure the department personnel column is affected
+				$("#departmentsTable").empty().append("<tbody></tbody>");
+
+				getAllDepartments();
+				
+				refreshAddEditDepartments();
+
+
 				$("#confirmEditPersonnelAlert").html("<div class='alert alert-success' role='alert'>Employee successfully edited.</div>");
 
 				$("#confirmEditPersonnel-submit-btn").attr("disabled", true);
+
 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -420,11 +435,22 @@ $(document).ready( function () {
 							
 							$currentPersonnelRow.remove();
 
+							//Ensure the department personnel column is affected
+							$("#departmentsTable").empty().append("<tbody></tbody>");
+
+							getAllDepartments();
+							
+							refreshAddEditDepartments();
+
+							//Here we leave it for today
+
 							$('#confirmDeletePersonnelAlert').html("<div class='alert alert-success' role='alert'>Employee successfully deleted.</div>");
 
 							$("#confirmDeletePersonnel-submit-btn").attr( "disabled", true );
 
 							$('#personnelTable').DataTable({responsive: true, scrollY: "60vh", paging: false}).draw();
+
+
 						}
 	
 					},
@@ -624,6 +650,19 @@ $(document).ready( function () {
 				}));
 
 				registerEditDeleteDepartmentButtons();
+
+				//Ensure the location and personnel tables are affected
+
+				$("#locationTable").empty().append("<tbody></tbody>");
+				
+				getAllLocations();		
+				
+				$("#personnelTable").empty().append("<tbody></tbody>");
+				
+				getAllPersonnel();
+				
+				refreshAddEditPersonnel();	
+
 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -844,6 +883,18 @@ $(document).ready( function () {
 							$("#departmentsTable").DataTable().destroy();
 
 							$currentDepartmentRow.remove();
+
+							//Ensure the other tables are affected
+
+							$("#locationTable").empty().append("<tbody></tbody>");
+				
+							getAllLocations();		
+							
+							$("#personnelTable").empty().append("<tbody></tbody>");
+							
+							getAllPersonnel();
+							
+							refreshAddEditPersonnel();
 
 							$('#confirmDeleteDepartmentAlert').html("<div class='alert alert-success' role='alert'>Department successfully deleted.</div>");
 	
